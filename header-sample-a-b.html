@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>表头圆润化样本 · A / B</title>
+<style>
+  :root {
+    --page-bg: #f4f2ef;
+    --ink: #1c1917;
+    --ink-2: #57534e;
+    --ink-3: #a8a29e;
+    --primary: #8c6246;
+    --on-primary: #ffffff;
+    --surface: #fafaf8;
+    --slot: rgba(120, 113, 108, 0.14);
+    --slot-strong: rgba(120, 113, 108, 0.2);
+    --badge-bg: rgba(140, 98, 70, 0.1);
+    --capsule-bg: rgba(140, 98, 70, 0.12);
+    --line: rgba(120, 113, 108, 0.25);
+    --band-bg: rgba(120, 113, 108, 0.16);
+    --frame: #ffffff;
+    --frame-border: #e7e5e4;
+  }
+  body.dark {
+    --page-bg: #0c0c0e;
+    --ink: #f5f5f4;
+    --ink-2: #a8a29e;
+    --ink-3: #78716c;
+    --primary: #d9b48f;
+    --on-primary: #2b1d12;
+    --surface: #121214;
+    --slot: rgba(255, 255, 255, 0.09);
+    --slot-strong: rgba(255, 255, 255, 0.13);
+    --badge-bg: rgba(217, 180, 143, 0.18);
+    --capsule-bg: rgba(217, 180, 143, 0.22);
+    --line: rgba(255, 255, 255, 0.15);
+    --band-bg: rgba(255, 255, 255, 0.1);
+    --frame: #17171a;
+    --frame-border: #292524;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--page-bg);
+    color: var(--ink);
+    padding: 24px 16px 48px;
+  }
+  h1 { font-size: 20px; font-weight: 700; text-align: center; }
+  .sub { text-align: center; color: var(--ink-2); font-size: 13px; margin-top: 6px; }
+  .toggle { display: flex; gap: 8px; justify-content: center; margin: 16px 0 20px; }
+  .toggle button {
+    border: 1px solid var(--frame-border);
+    background: var(--frame);
+    color: var(--ink);
+    font-size: 13px;
+    padding: 7px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .toggle button.on { background: var(--primary); color: var(--on-primary); border-color: transparent; }
+  .row { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+  .sample { width: 375px; max-width: 100%; }
+  .sample h2 { font-size: 16px; margin-bottom: 4px; }
+  .sample h2 .tag {
+    font-size: 11px; font-weight: 600; color: var(--on-primary);
+    background: var(--primary); border-radius: 999px; padding: 2px 8px;
+    vertical-align: 2px; margin-left: 6px;
+  }
+  .sample p.desc { font-size: 12px; color: var(--ink-2); margin-bottom: 10px; line-height: 1.6; }
+  .phone {
+    background: var(--frame);
+    border: 1px solid var(--frame-border);
+    border-radius: 24px;
+    overflow: hidden;
+  }
+  .appbar {
+    height: 48px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 8px 0 16px; font-size: 16px; font-weight: 600;
+    border-bottom: 1px solid var(--frame-border);
+  }
+  .appbar .dots { font-size: 20px; letter-spacing: 1px; color: var(--ink-2); }
+  /* ---- weekday header ---- */
+  .header { display: flex; padding: 6px 0 0; }
+  .axis-head { width: 48px; flex: none; }
+  .days { flex: 1; display: flex; }
+  .day { flex: 1; text-align: center; padding: 3px 0 6px; }
+  .day .wd { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+  .day .dt { font-size: 15px; font-weight: 500; color: var(--ink); margin-top: 2px; }
+  .day.today .wd { color: var(--primary); }
+  /* A: today column capsule */
+  .a .day.today {
+    margin: 0 4px; padding: 3px 0 6px;
+    background: var(--capsule-bg);
+    border-radius: 12px;
+  }
+  .a .day.today .dt {
+    width: 22px; height: 22px; line-height: 22px; margin: 3px auto 0;
+    background: var(--primary); color: var(--on-primary);
+    border-radius: 50%; font-weight: 700; font-size: 13px;
+  }
+  /* B: each day an independent tile */
+  .b .day { margin: 0 2px; border-radius: 10px; background: var(--slot); padding: 4px 0 6px; }
+  .b .day.today { background: var(--primary); }
+  .b .day.today .wd, .b .day.today .dt { color: var(--on-primary); }
+  .b .day.today .wd { font-weight: 700; }
+  .header-line { height: 1px; background: var(--line); margin-top: 2px; }
+  /* ---- grid ---- */
+  .grid { display: flex; position: relative; }
+  .axis { width: 48px; flex: none; padding: 0 3px; }
+  .a .axis {
+    background: var(--slot);
+    border-radius: 12px;
+    margin: 2px 0 2px 3px;
+    padding: 2px 3px;
+    width: 45px;
+  }
+  .slot { height: 46px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .slot .num { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+  .a .slot .num {
+    width: 22px; height: 18px; line-height: 18px; text-align: center;
+    background: var(--badge-bg); color: var(--primary);
+    border-radius: 6px; font-size: 11px; font-weight: 700;
+  }
+  .slot .tm { font-size: 8px; color: var(--ink-3); margin-top: 1px; }
+  .b .slot { margin: 1px 2px; background: var(--slot); border-radius: 9px; height: 44px; }
+  .cols { flex: 1; position: relative; }
+  .col { position: absolute; top: 0; bottom: 0; }
+  .course {
+    position: absolute; left: 2px; right: 2px; border-radius: 8px;
+    padding: 5px 6px; font-size: 11px; line-height: 1.35; overflow: hidden;
+  }
+  .course b { display: block; font-weight: 600; }
+  .course span { opacity: 0.75; font-size: 10px; }
+  .band {
+    position: absolute; left: 0; right: 0; height: 26px;
+    background: var(--band-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--ink-2); letter-spacing: 4px;
+  }
+  .band i { font-style: normal; letter-spacing: 0; margin-left: 8px; font-size: 10px; opacity: 0.8; }
+  .foot { text-align: center; color: var(--ink-2); font-size: 12px; margin-top: 24px; line-height: 1.8; }
+</style>
+</head>
+<body class="dark">
+<h1>表头圆润化样本</h1>
+<p class="sub">今天 11 月 5 日周四 · 颜色跟随当前主题（可可棕），只看形状</p>
+<div class="toggle">
+  <button id="btn-dark" class="on" onclick="setTheme('dark')">深色</button>
+  <button id="btn-light" onclick="setTheme('light')">浅色</button>
+</div>
+
+<div class="row">
+  <!-- ============ A ============ -->
+  <div class="sample a">
+    <h2>A · 微胶囊一体高亮<span class="tag">首选</span></h2>
+    <p class="desc">去竖向分割线；今天那列穿一条竖向胶囊，日期套实心圆豆；左侧时间列包圆角浅底槽，节次号进小徽标。克制，只高亮今天。</p>
+    <div class="phone">
+      <div class="appbar"><span>小马课表</span><span class="dots">⋮</span></div>
+      <div class="header">
+        <div class="axis-head"></div>
+        <div class="days">
+          <div class="day"><div class="wd">周一</div><div class="dt">2</div></div>
+          <div class="day"><div class="wd">周二</div><div class="dt">3</div></div>
+          <div class="day"><div class="wd">周三</div><div class="dt">4</div></div>
+          <div class="day today"><div class="wd">周四</div><div class="dt">5</div></div>
+          <div class="day"><div class="wd">周五</div><div class="dt">6</div></div>
+          <div class="day"><div class="wd">周六</div><div class="dt">7</div></div>
+          <div class="day"><div class="wd">周日</div><div class="dt">8</div></div>
+        </div>
+      </div>
+      <div class="header-line"></div>
+      <div class="grid">
+        <div class="axis" id="axis-a"></div>
+        <div class="cols" id="cols-a"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ B ============ -->
+  <div class="sample b">
+    <h2>B · 独立软磁贴</h2>
+    <p class="desc">每天一格独立小卡，今天整卡实心主题色反白；左侧每节一个小磁贴。活泼，但满屏小方块，和彩色课程格子容易抢视线。</p>
+    <div class="phone">
+      <div class="appbar"><span>小马课表</span><span class="dots">⋮</span></div>
+      <div class="header">
+        <div class="axis-head"></div>
+        <div class="days">
+          <div class="day"><div class="wd">周一</div><div class="dt">2</div></div>
+          <div class="day"><div class="wd">周二</div><div class="dt">3</div></div>
+          <div class="day"><div class="wd">周三</div><div class="dt">4</div></div>
+          <div class="day today"><div class="wd">周四</div><div class="dt">5</div></div>
+          <div class="day"><div class="wd">周五</div><div class="dt">6</div></div>
+          <div class="day"><div class="wd">周六</div><div class="dt">7</div></div>
+          <div class="day"><div class="wd">周日</div><div class="dt">8</div></div>
+        </div>
+      </div>
+      <div class="header-line"></div>
+      <div class="grid">
+        <div class="axis" id="axis-b"></div>
+        <div class="cols" id="cols-b"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="foot">两个样本的课程格子、午休 / 晚休带都只是示意，方便你看表头在整表里的感觉。<br>你挑 A 还是 B，我再进 App 里改。</p>
+
+<script>
+  const times = ['08:00','08:55','10:00','10:55','13:30','14:25','15:30','16:25','18:30','19:25','20:20','21:15','21:15'];
+  const courses = [
+    { day: 0, s: 1, span: 2, name: '药物化学', meta: '16-102', bg: 'rgba(76,175,80,.28)', fg: '#a5d6a7' },
+    { day: 1, s: 3, span: 2, name: '药理学', meta: '16-204', bg: 'rgba(66,165,245,.28)', fg: '#90caf9' },
+    { day: 3, s: 1, span: 2, name: '药物分析', meta: '16-102', bg: 'rgba(255,167,38,.30)', fg: '#ffcc80' },
+    { day: 3, s: 5, span: 2, name: '有机化学', meta: '16-308', bg: 'rgba(171,71,188,.30)', fg: '#ce93d8' },
+    { day: 4, s: 9, span: 2, name: '药剂学', meta: '16-102', bg: 'rgba(38,198,218,.26)', fg: '#80deea' },
+    { day: 5, s: 3, span: 2, name: '生物化学', meta: '16-204', bg: 'rgba(236,64,122,.26)', fg: '#f48fb1' },
+  ];
+  const ROW = 46, BAND = 26;
+  function topOf(section, bandBefore) {
+    return (section - 1) * ROW + bandBefore * BAND;
+  }
+  function build(axisId, colsId) {
+    let axisHtml = '';
+    for (let s = 1; s <= 13; s++) {
+      axisHtml += '<div class="slot"><div class="num">' + s + '</div><div class="tm">' + times[s - 1] + '</div></div>';
+      if (s === 4) axisHtml += '<div style="height:' + BAND + 'px"></div>';
+      if (s === 8) axisHtml += '<div style="height:' + BAND + 'px"></div>';
+    }
+    document.getElementById(axisId).innerHTML = axisHtml;
+    let colsHtml = '';
+    for (let d = 0; d < 7; d++) {
+      colsHtml += '<div class="col" style="left:' + (d * 100 / 7) + '%;width:' + (100 / 7) + '%"></div>';
+    }
+    courses.forEach(c => {
+      const bandBefore = c.s > 8 ? 2 : (c.s > 4 ? 1 : 0);
+      const top = topOf(c.s, bandBefore);
+      colsHtml += '<div class="course" style="left:' + (c.day * 100 / 7 + 0.5) + '%;width:' + (100 / 7 - 1) + '%;top:' + top + 'px;height:' + (c.span * ROW - 3) + 'px;background:' + c.bg + ';color:' + c.fg + '"><b>' + c.name + '</b><span>' + c.meta + '</span></div>';
+    });
+    colsHtml += '<div class="band" style="top:' + (4 * ROW) + 'px">午 休<i>12:00–14:00</i></div>';
+    colsHtml += '<div class="band" style="top:' + (8 * ROW + BAND) + 'px">晚 休<i>17:10–18:00</i></div>';
+    document.getElementById(colsId).innerHTML = colsHtml;
+    document.getElementById(colsId).style.height = (13 * ROW + 2 * BAND) + 'px';
+    document.getElementById(axisId).style.height = (13 * ROW + 2 * BAND) + 'px';
+  }
+  build('axis-a', 'cols-a');
+  build('axis-b', 'cols-b');
+  function setTheme(t) {
+    document.body.className = t === 'dark' ? 'dark' : '';
+    document.getElementById('btn-dark').className = t === 'dark' ? 'on' : '';
+    document.getElementById('btn-light').className = t === 'light' ? 'on' : '';
+  }
+</script>
+</body>
+</html>
