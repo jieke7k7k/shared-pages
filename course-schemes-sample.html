@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小马课表 · 新课程配色样本</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #17181c; color: #f2f2f2; padding: 20px 14px 40px; }
+  body.light { background: #f7f5f1; color: #222; }
+  .wrap { max-width: 560px; margin: 0 auto; }
+  h1 { font-size: 20px; margin-bottom: 6px; }
+  .sub { font-size: 13px; color: #9a9aa2; margin-bottom: 16px; line-height: 1.6; }
+  body.light .sub { color: #777; }
+  .toggle { display: flex; gap: 8px; margin-bottom: 22px; }
+  .toggle button { flex: 1; padding: 9px 0; border-radius: 10px; border: 1px solid #3a3b42; background: #232428; color: #ddd; font-size: 14px; cursor: pointer; }
+  body.light .toggle button { border-color: #ddd; background: #fff; color: #333; }
+  .toggle button.on { background: #3e7b67; border-color: #3e7b67; color: #fff; }
+  h2 { font-size: 16px; margin: 26px 0 4px; }
+  .tag { font-size: 12px; color: #9a9aa2; margin-bottom: 10px; }
+  body.light .tag { color: #888; }
+  .swatches { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .sw { width: 30px; height: 44px; border-radius: 7px; }
+  .grid { display: grid; grid-template-columns: 34px repeat(5, 1fr); gap: 3px; font-size: 11px; }
+  .grid .head, .grid .sec { display: flex; align-items: center; justify-content: center; color: #9a9aa2; }
+  body.light .grid .head, body.light .grid .sec { color: #999; }
+  .grid .head { font-weight: 600; padding: 4px 0; }
+  .cell { border-radius: 8px; padding: 5px 4px; min-height: 52px; line-height: 1.35; overflow: hidden; }
+  .cell b { display: block; font-size: 11.5px; font-weight: 600; }
+  .cell span { font-size: 10px; opacity: .85; }
+  .cell.empty { background: transparent; }
+  .note { margin-top: 28px; font-size: 12px; color: #8a8a92; line-height: 1.8; border-top: 1px solid #2c2d33; padding-top: 14px; }
+  body.light .note { color: #999; border-top-color: #e0ddd6; }
+  .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px; }
+  .vs .col h3 { font-size: 13px; margin-bottom: 8px; }
+  .chip { border-radius: 8px; padding: 6px 8px; margin-bottom: 6px; font-size: 12px; font-weight: 600; line-height: 1.4; }
+  .chip span { display: block; font-weight: 400; font-size: 10.5px; opacity: .85; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>小马课表 · 新课程配色样本</h1>
+  <p class="sub">4 套新增多彩混搭方案（现有 6 套保留不动）。下面每个方案都配了一张迷你课表，同一批课换不同方案，直观看课和课之间分不分得清。默认深色，和你截图里一样；也可以切浅色看。</p>
+  <div class="toggle">
+    <button id="btnDark" class="on" onclick="setMode('dark')">深色</button>
+    <button id="btnLight" onclick="setMode('light')">浅色</button>
+  </div>
+
+  <h2>先看问题出在哪</h2>
+  <p class="tag">同一批 8 门课：左边是现在的海盐·蓝调（全是蓝），右边是新方案春日·游园会</p>
+  <div class="vs">
+    <div class="col"><h3>海盐·蓝调（现有）</h3><div id="vsOld"></div></div>
+    <div class="col"><h3>春日·游园会（新增）</h3><div id="vsNew"></div></div>
+  </div>
+
+  <div id="schemes"></div>
+
+  <p class="note">核对过：每套都是完整的 16 个色，相邻两个颜色的色相都拉得很开（基本在 90° 以上，只有 3 处在 76°–83°，肉眼依然很好区分）；6 个色相扇区每套都占满。<br>深色模式不用担心：App 本来就会把课程色降饱和、压暗再配浅色字，新方案走同一套逻辑，颜色越杂、深色下反而越好认。</p>
+</div>
+<script>
+const SCHEMES = [
+  { name: '春日·游园会', tag: '马卡龙粉彩混搭 · 推荐主题：雾绿', colors: ['FFCDD2','B8E8E2','FFE5B4','D4C8F0','C5E8B7','FFCFB8','BDD9F5','F4C4E0','E8F0B6','B6CBE8','F5D5C0','B4E2CB','E2C6EC','FCEBA8','B8DFEE','F2BDC7'] },
+  { name: '奶油·苏打水', tag: '马卡龙粉彩混搭 · 夏日气泡水风 · 推荐主题：海盐蓝', colors: ['B6E3EE','FFC8BD','CCEBC5','CBC9F2','FFEAB6','ADE2D4','F9C6D8','B8D2F2','FFD8B4','E4C4EA','DFF0B8','AEC8E4','F7CBC4','BBEAD8','D8C6E8','F7E5A9'] },
+  { name: '多巴胺·糖果盒', tag: '饱和度稍高的缤纷混搭 · 推荐主题：曜石灰', colors: ['FFA6A8','94C2F4','FFDB85','C2AAEE','A2E0A8','FFB58A','88DCE0','F4A6D0','D2E88E','9AB4E6','F9A88C','8CD9BC','DAA8EC','FBE48E','8ECDE6','F2A2B8'] },
+  { name: '复古·胶片馆', tag: '冷暖撞色混搭 · 推荐主题：可可棕', colors: ['E8B4A6','A6C4DC','F0D69E','AECBB8','DDB2C4','9ECED2','EEC29E','C2B6DC','C8D8A8','E6AAA6','9EB6D4','F2DFB2','9EC8B8','D8B2D4','E8C8B0','98BECA'] },
+];
+const SEASALT = ['9DBEDE','8FB0D8','A8C8E8','93C4D8','84B8C8','7FB3B0','8FC0B4','A5CDBE','7E9CC4','94AED2','86B4C4','9CC0D0','7A94B8','8AA8C0','A0BCCE','6F96B4'];
+// 迷你课表：8 门课，用偶数下标（色相拉得最开的一组）
+const COURSES = [
+  { name: '高等数学', room: '16-201', idx: 0, day: 1, row: 1, span: 1 },
+  { name: '大学英语', room: '16-105', idx: 2, day: 2, row: 1, span: 1 },
+  { name: '药物化学', room: '16-102', idx: 4, day: 3, row: 1, span: 2 },
+  { name: '有机化学', room: '16-301', idx: 6, day: 4, row: 2, span: 1 },
+  { name: '药理学', room: '16-204', idx: 8, day: 5, row: 1, span: 1 },
+  { name: '药物分析', room: '16-102', idx: 10, day: 1, row: 3, span: 1 },
+  { name: '生物化学', room: '16-305', idx: 12, day: 2, row: 3, span: 2 },
+  { name: '体育', room: '操场', idx: 14, day: 4, row: 4, span: 1 },
+];
+const DAYS = ['一','二','三','四','五'];
+const ROWS = ['1-2节','3-4节','5-6节','7-8节'];
+
+function hexToRgb(h){ return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)]; }
+function rgbToHsv(r,g,b){ r/=255; g/=255; b/=255; const mx=Math.max(r,g,b), mn=Math.min(r,g,b), d=mx-mn; let h=0; if(d){ if(mx===r) h=((g-b)/d)%6; else if(mx===g) h=(b-r)/d+2; else h=(r-g)/d+4; h*=60; if(h<0)h+=360; } return [h, mx?d/mx:0, mx]; }
+function hsvToRgb(h,s,v){ h/=60; const c=v*s, x=c*(1-Math.abs(h%2-1)), m=v-c; let r=0,g=0,b=0; if(h<1){r=c;g=x;} else if(h<2){r=x;g=c;} else if(h<3){g=c;b=x;} else if(h<4){g=x;b=c;} else if(h<5){r=x;b=c;} else {r=c;b=x;} return [Math.round((r+m)*255), Math.round((g+m)*255), Math.round((b+m)*255)]; }
+function css(rgb){ return 'rgb('+rgb.join(',')+')'; }
+// App 深色逻辑：饱和度 ×0.72，明度 ×0.42，夹在 0.18–0.40
+function darkVariant(hex){ const [r,g,b]=hexToRgb(hex); let [h,s,v]=rgbToHsv(r,g,b); s=Math.min(1,s*0.72); v=Math.min(0.40,Math.max(0.18,v*0.42)); return hsvToRgb(h,s,v); }
+function luminance(rgb){ const f=c=>{ c/=255; return c<=0.03928?c/12.92:Math.pow((c+0.055)/1.055,2.4); }; return 0.2126*f(rgb[0])+0.7152*f(rgb[1])+0.0722*f(rgb[2]); }
+
+let mode = 'dark';
+function paint(){
+  document.body.classList.toggle('light', mode==='light');
+  document.getElementById('btnDark').classList.toggle('on', mode==='dark');
+  document.getElementById('btnLight').classList.toggle('on', mode==='light');
+  // 对比区
+  [['vsOld', SEASALT], ['vsNew', SCHEMES[0].colors]].forEach(([id, cols])=>{
+    const el = document.getElementById(id);
+    el.innerHTML = COURSES.map(c=>{
+      const hex = cols[c.idx];
+      const bg = mode==='dark' ? darkVariant(hex) : hexToRgb(hex);
+      const fg = (mode==='dark' || luminance(bg) < 0.42) ? '#E8E4DE' : '#3B3B3B';
+      return '<div class="chip" style="background:'+css(bg)+';color:'+fg+'">'+c.name+'<span>'+c.room+'</span></div>';
+    }).join('');
+  });
+  // 四套方案
+  const host = document.getElementById('schemes');
+  host.innerHTML = SCHEMES.map(s=>{
+    const sw = s.colors.map(c=>'<div class="sw" style="background:#'+c+'"></div>').join('');
+    // 迷你课表：用显式 grid-row / grid-column 定位，跨节课程占住的格子不再补空 cell
+    const occupied = {};
+    let cells = '';
+    for(let r=0;r<4;r++){
+      cells += '<div class="sec" style="grid-column:1;grid-row:'+(r+2)+'">'+ROWS[r]+'</div>';
+      for(let d=1;d<=5;d++){
+        if(occupied[r+'-'+d]) continue;
+        const course = COURSES.find(c=>c.day===d && c.row===r+1);
+        if(course){
+          for(let k=1;k<course.span;k++) occupied[(r+k)+'-'+d] = true;
+          const hex = s.colors[course.idx];
+          const bg = mode==='dark' ? darkVariant(hex) : hexToRgb(hex);
+          const fg = (mode==='dark' || luminance(bg) < 0.42) ? '#E8E4DE' : '#3B3B3B';
+          cells += '<div class="cell" style="grid-column:'+(d+1)+';grid-row:'+(r+2)+' / span '+course.span+'; background:'+css(bg)+'; color:'+fg+'"><b>'+course.name+'</b><span>'+course.room+'</span></div>';
+        } else {
+          cells += '<div class="cell empty" style="grid-column:'+(d+1)+';grid-row:'+(r+2)+'"></div>';
+        }
+      }
+    }
+    const head = '<div style="grid-column:1;grid-row:1"></div>' + DAYS.map((d,i)=>'<div class="head" style="grid-column:'+(i+2)+';grid-row:1">周'+d+'</div>').join('');
+    return '<h2>'+s.name+'</h2><p class="tag">'+s.tag+'</p><div class="swatches">'+sw+'</div><div class="grid">'+head+cells+'</div>';
+  }).join('');
+}
+function setMode(m){ mode=m; paint(); }
+paint();
+</script>
+</body>
+</html>
