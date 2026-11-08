@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>设置简化样品 · WB_SPEC_228 拆子页版</title>
+<title>设置简化样品 · WB_SPEC_228 拆子页版＋线框</title>
 <style>
 :root{
   --bg:#F6F1EC; --surface:#FFFDF9; --bar:#EFE7DC; --ink:#211D19; --sub:#8B8378;
@@ -91,6 +91,14 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
 .stepper b{font-size:16px;}
 .sub-btn{display:block; margin:6px auto 2px; background:none; border:0; color:var(--accent-ink); font-size:14px; padding:10px 16px; cursor:pointer;}
 .sub-note{text-align:center; font-size:12px; color:var(--sub); padding:0 16px 10px; line-height:1.5;}
+.gbox{margin:4px 16px 0; border:1px solid #E5E7EB; border-radius:14px; background:var(--surface); padding:0 16px;}
+.gbox .row, .gbox .pick, .gbox .slider-row{padding-left:0; padding-right:0; border-bottom:0.5px solid #ECECEF;}
+.gbox .row:last-child, .gbox .pick:last-child, .gbox .slider-row:last-child{border-bottom:0;}
+.gbox .fold{border-bottom:0.5px solid #ECECEF;}
+.gbox .fold > button{padding-left:0; padding-right:0;}
+.gbox .fold:last-child{border-bottom:0;}
+.gbox .slot{margin-left:0; margin-right:0;}
+.gbox .breakrow, .gbox .tail-hint{padding-left:0; padding-right:0;}
 /* 子页与底部弹窗 */
 .page{display:none;}
 .page.on{display:block;}
@@ -125,6 +133,8 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
   .sw.off::after{background:#4A4136;}
   .preview .c1{background:#33523F; color:#CFE8D6;}
   .preview .c2{background:#3A4A38; color:#CFE8D6;}
+  .gbox{border-color:rgba(255,255,255,.09);}
+  .gbox .row, .gbox .pick, .gbox .slider-row, .gbox .fold{border-bottom-color:rgba(255,255,255,.07);}
 }
 @media (max-width: 600px){
   .phone{box-shadow:none;}
@@ -133,7 +143,7 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
 </style>
 </head>
 <body>
-<div class="note"><b>样品 v2 · 设置简化 WB_SPEC_228 拆子页版</b><br>按 Argon 第二轮方案改的：父页只剩入口行，滑杆和折叠全部赶出父页；网格、卡片、字体、节次规则各进一个子页，点进去平铺，顶上带小预览。点「课表网格与表头」「课程卡片样式」「全局显示字体」「节次数量与分段」可以进子页，点左上角 ‹ 回来；点主题色、课程配色、一键套用会从底部弹选择器。</div>
+<div class="note"><b>样品 v3 · 设置简化 WB_SPEC_228 拆子页版＋线框</b><br>按 Argon 线框方案（形态 A）改的：每个分组标题留在框外左上方，子项包进 1.0dp 极淡灰线框（圆角 14dp），框内分隔线 0.5dp、左右缩进 16。点「课表网格与表头」「课程卡片样式」「全局显示字体」「节次数量与分段」可以进子页看里面的框，点左上角 ‹ 回来；点主题色、课程配色、一键套用会从底部弹选择器。</div>
 <div class="phone">
   <div class="tabs" id="tabs">
     <button id="tabA" class="on" onclick="showPage('A')">外观</button>
@@ -155,19 +165,25 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
     </div>
 
     <div class="ghead">色彩与字体</div>
+<div class="gbox">
     <div class="row"><div class="t"><div class="name">深浅模式</div></div><span class="seg-sm" id="segTheme"><button class="on" onclick="seg(this)">✓ 跟随系统</button><button onclick="seg(this)">浅色</button><button onclick="seg(this)">深色</button></span></div>
     <button class="pick" onclick="openSheet('theme')"><span class="name">界面主题色</span><span class="v"><span class="dot" id="themeDot" style="background:#7A5230"></span><span id="themeName">可可棕</span></span><span class="chev">›</span></button>
     <button class="pick" onclick="openSheet('scheme')"><span class="name">课程卡片配色</span><span class="v"><span class="dots"><i style="background:#F2C4A0"></i><i style="background:#A8C4DE"></i><i style="background:#F2D98C"></i><i style="background:#A8D5B5"></i></span><span id="schemeName">复古 · 胶片馆</span></span><span class="chev">›</span></button>
     <button class="pick" onclick="openSub('subFont')"><span class="name">全局显示字体</span><span class="v">系统默认</span><span class="chev">›</span></button>
 
-    <div class="ghead">课表排版与细节</div>
+    </div>
+<div class="ghead">课表排版与细节</div>
+<div class="gbox">
     <button class="pick" onclick="openSub('subGrid')"><span class="t" style="flex:1; min-width:0; text-align:left;"><span class="name" style="font-weight:500; display:block;">课表网格与表头</span><span class="sub" style="font-size:12px; color:var(--sub); display:block; margin-top:2px;">周末收起、非本周课程、行高与网格线</span></span><span class="v">自适应</span><span class="chev">›</span></button>
     <button class="pick" onclick="openSub('subCard')"><span class="t" style="flex:1; min-width:0; text-align:left;"><span class="name" style="font-weight:500; display:block;">课程卡片样式</span><span class="sub" style="font-size:12px; color:var(--sub); display:block; margin-top:2px;">卡片圆角、字号大小、教室与教师显示</span></span><span class="v">12px · 100%</span><span class="chev">›</span></button>
 
-    <div class="ghead">导航与底栏</div>
+    </div>
+<div class="ghead">导航与底栏</div>
+<div class="gbox">
     <div class="row" style="min-height:72px;"><div class="t"><div class="name">底部栏显示</div><div class="sub">关闭后可从主页右上角菜单进入设置</div></div><button class="sw on" onclick="togBottom(this)" aria-label="开关"></button></div>
     <button class="pick" id="animRow" onclick="toast('样品：点开弹底部选择器选动效')"><span class="name">页面切换动效</span><span class="v">柔和</span><span class="chev">›</span></button>
-    <div style="height:24px"></div>
+    </div>
+<div style="height:24px"></div>
   </div>
 
   <!-- ============ 子页：网格与表头设置 ============ -->
@@ -183,17 +199,21 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
       </div>
     </div>
     <div class="ghead">显示规则</div>
+<div class="gbox">
     <div class="row"><div class="t"><div class="name">周末无课时自动收起周六日</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
     <div class="row"><div class="t"><div class="name">显示非本周课程</div></div><button class="sw" onclick="tog(this)" aria-label="开关"></button></div>
     <div class="row"><div class="t"><div class="name">今天整列边框高亮</div></div><button class="sw" onclick="tog(this)" aria-label="开关"></button></div>
     <div class="row"><div class="t"><div class="name">节数栏显示时间</div><div class="sub">左侧节数栏显示每节上下课时间</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
     <div class="row"><div class="t"><div class="name">标题显示单双周</div><div class="sub">标题栏显示当前周是单周还是双周</div></div><button class="sw" onclick="tog(this)" aria-label="开关"></button></div>
-    <div class="ghead">尺寸与网格线</div>
+    </div>
+<div class="ghead">尺寸与网格线</div>
+<div class="gbox">
     <div class="row"><div class="t"><div class="name">行高自适应一屏 <i class="info" onclick="toast('自适应时格子高度随屏幕自动算，不用手动调')">i</i></div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
     <div class="slider-row"><span class="name">课程格子高度</span><span class="track"><span class="fill" style="width:18%"></span><span class="thumb" style="left:18%"></span></span><span class="val">自适应中</span></div>
     <div class="row"><div class="t"><div class="name">显示网格线</div></div><button class="sw" onclick="tog(this)" aria-label="开关"></button></div>
     <div class="slider-row"><span class="name">格子边框粗细</span><span class="track"><span class="fill" style="width:42%"></span><span class="thumb" style="left:42%"></span></span><span class="val">2.1 px</span></div>
-    <div style="height:24px"></div>
+    </div>
+<div style="height:24px"></div>
   </div>
 
   <!-- ============ 子页：课程卡片样式 ============ -->
@@ -209,22 +229,26 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
       </div>
     </div>
     <div class="ghead">卡片样式</div>
+<div class="gbox">
     <div class="slider-row"><span class="name">格子圆角半径</span><span class="track"><span class="fill" style="width:55%"></span><span class="thumb" style="left:55%"></span></span><span class="val">12 px</span></div>
     <div class="slider-row"><span class="name">卡片文字大小</span><span class="track"><span class="fill" style="width:40%"></span><span class="thumb" style="left:40%"></span></span><span class="val">100%</span></div>
     <div class="row"><div class="t"><div class="name">显示教室</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
     <div class="row"><div class="t"><div class="name">显示老师</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
     <div class="row"><div class="t"><div class="name">显示备注</div><div class="sub">备注过长时自动省略</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
-    <div style="height:24px"></div>
+    </div>
+<div style="height:24px"></div>
   </div>
 
   <!-- ============ 子页：显示字体 ============ -->
   <div class="page" id="subFont">
     <div class="subbar"><button class="back" onclick="goBack()">‹</button><h1>显示字体</h1></div>
     <div class="ghead">字体</div>
+<div class="gbox">
     <button class="pick" onclick="pickFont(this)"><span class="name">系统默认</span><span class="v chk" style="color:var(--accent); font-weight:700;">✓</span></button>
     <button class="pick" onclick="pickFont(this)"><span class="name">得意黑</span><span class="v"></span></button>
     <button class="pick" onclick="pickFont(this)"><span class="name">思源黑体</span><span class="v"></span></button>
-    <button class="sub-btn" onclick="toast('样品：从手机里选 TTF / OTF 字体文件')">导入字体文件</button>
+    </div>
+<button class="sub-btn" onclick="toast('样品：从手机里选 TTF / OTF 字体文件')">导入字体文件</button>
     <div class="sub-note">从手机里选 TTF / OTF 字体，导入后立即全 App 生效</div>
     <div style="height:24px"></div>
   </div>
@@ -234,10 +258,13 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
     <div class="appbar"><button class="back" onclick="toast('样品：返回设置首页')">‹</button><h1>作息时间</h1></div>
 
     <div class="ghead">全局规则</div>
+<div class="gbox">
     <button class="pick" onclick="openSub('subRule')"><span class="name">节次数量与分段</span><span class="v">共 13 节 (5-4-4) · 含午休晚餐</span><span class="chev">›</span></button>
     <button class="pick" onclick="openSheet('preset')"><span class="name">一键套用与批量推算</span><span class="v">按首节与课间推算</span><span class="chev">›</span></button>
 
-    <div class="ghead">各节上下课时间（点击时间直接修改）</div>
+    </div>
+<div class="ghead">各节上下课时间（点击时间直接修改）</div>
+<div class="gbox">
     <div class="fold" id="foldAm">
       <button onclick="fold('foldAm')"><span>上午</span><span class="cnt">5 节 · 08:00–12:00</span><span class="arr">›</span></button>
       <div class="body"><div><div class="inner" style="border-top:0; padding-bottom:8px;">
@@ -269,22 +296,29 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
         <div class="tail-hint">提示：修改即时生效，周视图左侧时间轴会自动同步。</div>
       </div></div></div>
     </div>
-    <div style="height:24px"></div>
+    </div>
+<div style="height:24px"></div>
   </div>
 
   <!-- ============ 子页：节次数量与分段规则 ============ -->
   <div class="page" id="subRule">
     <div class="subbar"><button class="back" onclick="goBack()">‹</button><h1>节次数量与分段规则</h1></div>
     <div class="ghead">节次数量</div>
+<div class="gbox">
     <div class="row"><div class="t"><div class="name">每日节次总数</div><div class="sub">可自定义 4 ~ 20 节</div></div><span class="stepper"><button onclick="toast('样品：节次总数 −1')">−</button><b>13 节</b><button onclick="toast('样品：节次总数 +1')">＋</button></span></div>
-    <div class="ghead">分段设置</div>
+    </div>
+<div class="ghead">分段设置</div>
+<div class="gbox">
     <div class="row"><div class="t"><div class="name">午休在第 5 节后</div></div><span class="stepper"><button onclick="toast('样品：午休分段点 −1')">−</button><b>第 5 节</b><button onclick="toast('样品：午休分段点 +1')">＋</button></span></div>
     <div class="row"><div class="t"><div class="name">晚餐在第 9 节后</div></div><span class="stepper"><button onclick="toast('样品：晚餐分段点 −1')">−</button><b>第 9 节</b><button onclick="toast('样品：晚餐分段点 +1')">＋</button></span></div>
-    <div class="ghead">休息时段</div>
+    </div>
+<div class="ghead">休息时段</div>
+<div class="gbox">
     <div class="row"><div class="t"><div class="name">休息时段</div><div class="sub">午休 / 晚间显隐 + 自定义起止时间</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
     <button class="pick" onclick="toast('样品：点开时间选择器改午休起止')"><span class="name">午休</span><span class="v">12:00 – 14:00</span><span class="chev">›</span></button>
     <button class="pick" onclick="toast('样品：点开时间选择器改晚间起止')"><span class="name">晚间</span><span class="v">21:10 – 次日 07:00</span><span class="chev">›</span></button>
-    <div style="height:24px"></div>
+    </div>
+<div style="height:24px"></div>
   </div>
 </div>
 
