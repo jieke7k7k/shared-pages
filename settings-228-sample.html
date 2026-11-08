@@ -3,29 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>设置简化样品 · WB_SPEC_228</title>
+<title>设置简化样品 · WB_SPEC_228 拆子页版</title>
 <style>
 :root{
   --bg:#F6F1EC; --surface:#FFFDF9; --bar:#EFE7DC; --ink:#211D19; --sub:#8B8378;
   --line:#E7DFD4; --accent:#6D4C41; --accent-soft:#EBDCD0; --accent-ink:#5D4037;
-  --switch-off:#E3DACA; --knob-off:#A79C8E; --chip-line:#D8CFC2; --green:#7FA889;
+  --switch-off:#E3DACA; --knob-off:#A79C8E; --chip-line:#D8CFC2;
 }
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
 body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif; font-size:15px; line-height:1.5;}
 .note{max-width:430px; margin:0 auto; padding:14px 16px 6px; font-size:13px; color:#6B6259; line-height:1.7;}
 .note b{color:#3D342C;}
 .phone{max-width:430px; margin:0 auto 32px; background:var(--bg); min-height:100vh; box-shadow:0 0 0 1px #D8CFC2, 0 8px 32px rgba(60,45,30,.18);}
-/* 顶部页签：外观 / 作息时间 */
 .tabs{display:flex; gap:8px; padding:12px 16px 4px; position:sticky; top:0; z-index:5; background:var(--bg);}
 .tabs button{flex:1; border:1px solid var(--chip-line); background:var(--surface); color:var(--ink); font-size:15px; padding:9px 0; border-radius:999px; cursor:pointer;}
 .tabs button.on{background:var(--accent); border-color:var(--accent); color:#FFF7EF; font-weight:600;}
-/* AppBar */
 .appbar{display:flex; align-items:center; background:var(--bar); padding:14px 16px; position:sticky; top:57px; z-index:5;}
 .appbar .back{font-size:22px; line-height:1; color:var(--ink); background:none; border:0; padding:0 14px 0 0; cursor:pointer;}
 .appbar h1{flex:1; text-align:center; font-size:20px; margin:0; padding-right:36px; font-weight:600;}
-/* 分组标题 */
 .ghead{font-size:13px; font-weight:600; color:var(--sub); padding:20px 16px 6px;}
-/* 行 */
 .row{display:flex; align-items:center; gap:12px; min-height:56px; padding:8px 16px; border-bottom:1px solid var(--line);}
 .row:last-child{border-bottom:0;}
 .row .t{flex:1; min-width:0;}
@@ -34,42 +30,32 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
 .info{display:inline-flex; width:18px; height:18px; border:1.5px solid var(--sub); border-radius:50%; color:var(--sub); font-size:11px; align-items:center; justify-content:center; font-style:normal; cursor:pointer; flex:none;}
 .val{color:var(--sub); font-size:15px; white-space:nowrap;}
 .chev{color:var(--sub); font-size:18px; flex:none;}
-/* 开关 */
 .sw{flex:none; width:52px; height:32px; border-radius:999px; background:var(--switch-off); position:relative; cursor:pointer; transition:background .2s; border:0; padding:0;}
 .sw::after{content:""; position:absolute; top:4px; left:4px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.25); transition:left .2s;}
 .sw.on{background:var(--accent);}
 .sw.on::after{left:24px;}
 .sw.off::after{background:#F3EEE6;}
-/* 滑杆行 */
 .slider-row{display:flex; align-items:center; gap:12px; min-height:56px; padding:8px 16px; border-bottom:1px solid var(--line);}
 .slider-row:last-child{border-bottom:0;}
 .slider-row .name{width:112px; flex:none; font-size:16px; font-weight:500;}
 .track{flex:1; height:4px; border-radius:2px; background:var(--switch-off); position:relative;}
 .track .fill{position:absolute; left:0; top:0; bottom:0; border-radius:2px; background:var(--accent);}
 .track .thumb{position:absolute; top:50%; width:22px; height:22px; border-radius:50%; background:var(--accent); transform:translate(-50%,-50%); box-shadow:0 1px 4px rgba(0,0,0,.3);}
-/* 三段选择 */
 .seg{display:flex; border:1.5px solid var(--chip-line); border-radius:999px; overflow:hidden; margin:4px 16px 12px; background:var(--surface);}
 .seg button{flex:1; border:0; background:none; padding:11px 0; font-size:15px; color:var(--ink); cursor:pointer;}
 .seg button.on{background:var(--accent-soft); font-weight:600; color:var(--accent-ink);}
 .seg button + button{border-left:1.5px solid var(--chip-line);}
-/* 色块网格 */
-.swatches{display:grid; grid-template-columns:repeat(4, 48px); gap:16px; padding:6px 16px 4px; justify-content:space-between;}
-.swb{display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer; background:none; border:0; padding:0;}
-.swb .box{width:48px; height:48px; border-radius:12px; position:relative; border:2px solid transparent;}
-.swb .nm{font-size:12px; color:var(--ink);}
-.swb.on .box{border-color:var(--accent);}
-.swb.on .box::after{content:"✓"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:20px; font-weight:700; text-shadow:0 1px 2px rgba(0,0,0,.4);}
-.swb.custom .box{border:2px dashed var(--chip-line); background:var(--surface); color:var(--sub); font-size:22px; display:flex; align-items:center; justify-content:center;}
-.custom-row{display:flex; align-items:center; gap:8px; margin:10px 16px 4px; padding:10px 12px; border:1px dashed var(--chip-line); border-radius:12px; background:none; width:calc(100% - 32px); font-size:14px; color:var(--sub); cursor:pointer;}
-/* 轻量下拉行 */
+.seg-sm{display:flex; border:1.5px solid var(--chip-line); border-radius:999px; overflow:hidden; background:var(--surface); flex:none;}
+.seg-sm button{border:0; background:none; padding:7px 12px; font-size:13px; color:var(--ink); cursor:pointer; white-space:nowrap;}
+.seg-sm button.on{background:var(--accent-soft); font-weight:600; color:var(--accent-ink);}
+.seg-sm button + button{border-left:1.5px solid var(--chip-line);}
 .pick{display:flex; align-items:center; gap:12px; min-height:56px; padding:8px 16px; border-bottom:1px solid var(--line); cursor:pointer; background:none; border-top:0; border-left:0; border-right:0; width:100%; text-align:left; font-size:16px; color:var(--ink);}
 .pick:last-child{border-bottom:0;}
 .pick .name{font-weight:500;}
 .pick .v{flex:1; text-align:right; color:var(--sub); font-size:15px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-/* 次级文字按钮 */
-.sub-btn{display:block; margin:6px auto 2px; background:none; border:0; color:var(--accent-ink); font-size:14px; padding:10px 16px; cursor:pointer;}
-.sub-note{text-align:center; font-size:12px; color:var(--sub); padding:0 16px 10px; line-height:1.5;}
-/* 折叠组 */
+.dot{width:16px; height:16px; border-radius:50%; flex:none; display:inline-block; vertical-align:-3px; margin-right:6px;}
+.dots{display:inline-flex; gap:3px; vertical-align:-3px; margin-right:6px;}
+.dots i{width:12px; height:12px; border-radius:50%; display:block;}
 .fold{border-bottom:1px solid var(--line);}
 .fold > button{width:100%; display:flex; align-items:center; gap:8px; background:none; border:0; padding:0 16px; min-height:56px; font-size:16px; font-weight:500; color:var(--ink); cursor:pointer; text-align:left;}
 .fold > button .cnt{flex:1; font-size:12px; color:var(--sub); font-weight:400; text-align:right;}
@@ -79,11 +65,6 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
 .fold.open .body{grid-template-rows:1fr;}
 .fold .body > div{overflow:hidden;}
 .fold .inner{border-top:1px solid var(--line);}
-/* chips 三选一 */
-.chips{display:flex; gap:8px; padding:2px 16px 12px;}
-.chips button{border:1.5px solid var(--chip-line); background:var(--surface); border-radius:999px; padding:8px 18px; font-size:15px; color:var(--ink); cursor:pointer;}
-.chips button.on{background:var(--accent-soft); border-color:var(--accent); color:var(--accent-ink); font-weight:600;}
-/* 预览条（瘦身后） */
 .preview{margin:4px 16px 0; border:1px solid var(--chip-line); border-radius:12px; background:var(--surface); padding:10px 12px;}
 .preview .pv-head{display:flex; justify-content:space-between; font-size:12px; color:var(--sub); padding:0 2px 8px;}
 .preview .pv-grid{display:grid; grid-template-columns:34px repeat(2, 1fr); gap:4px; font-size:11px;}
@@ -92,18 +73,12 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
 .preview .pv-grid .num{text-align:center; color:var(--sub); padding-top:6px;}
 .preview .c1{background:#CDE3D2; color:#2E4A37;}
 .preview .c2{background:#DDEBD9; color:#2E4A37;}
-/* 作息页卡片 */
 .card{margin:12px 16px 0; background:var(--surface); border-radius:16px; padding:14px 16px; box-shadow:0 1px 4px rgba(60,45,30,.06);}
 .card .ct{display:flex; align-items:center; gap:10px;}
 .card .ct .t{flex:1;}
 .card .ct .name{font-size:16px; font-weight:500;}
 .card .ct .sub{font-size:12px; color:var(--sub); margin-top:2px;}
-.tonal{border:0; background:var(--accent-soft); color:var(--accent-ink); border-radius:999px; padding:8px 16px; font-size:14px; font-weight:600; cursor:pointer;}
-.stepper{display:flex; align-items:center; gap:14px;}
-.stepper button{width:32px; height:32px; border-radius:50%; border:1.5px solid var(--chip-line); background:var(--surface); font-size:18px; color:var(--ink); cursor:pointer;}
-.stepper b{font-size:16px;}
 .hint{font-size:13px; color:var(--sub); padding:12px 16px 0; line-height:1.6;}
-/* 节次卡片（瘦身后 56） */
 .slot{display:flex; align-items:center; gap:10px; background:var(--surface); border-radius:12px; padding:0 14px; min-height:56px; margin:8px 16px 0; border:1px solid var(--line);}
 .slot .no{font-size:16px; font-weight:500; width:26px; text-align:center; flex:none;}
 .slot .tm{flex:1; display:flex; align-items:center; justify-content:center; gap:8px; font-size:15px;}
@@ -111,11 +86,37 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
 .slot .tm .sep{color:var(--sub);}
 .breakrow{display:flex; align-items:center; gap:8px; padding:12px 16px 0; font-size:13px; color:var(--sub);}
 .tail-hint{font-size:12px; color:var(--sub); padding:10px 16px 4px; line-height:1.5;}
-/* toast */
-#toast{position:fixed; left:50%; bottom:48px; transform:translateX(-50%) translateY(20px); background:#3D342C; color:#FFF7EF; font-size:14px; padding:10px 18px; border-radius:999px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:50; white-space:nowrap; max-width:92vw; overflow:hidden; text-overflow:ellipsis;}
-#toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+.stepper{display:flex; align-items:center; gap:14px;}
+.stepper button{width:32px; height:32px; border-radius:50%; border:1.5px solid var(--chip-line); background:var(--surface); font-size:18px; color:var(--ink); cursor:pointer;}
+.stepper b{font-size:16px;}
+.sub-btn{display:block; margin:6px auto 2px; background:none; border:0; color:var(--accent-ink); font-size:14px; padding:10px 16px; cursor:pointer;}
+.sub-note{text-align:center; font-size:12px; color:var(--sub); padding:0 16px 10px; line-height:1.5;}
+/* 子页与底部弹窗 */
 .page{display:none;}
 .page.on{display:block;}
+.subbar{display:flex; align-items:center; background:var(--bar); padding:14px 16px;}
+.subbar .back{font-size:22px; line-height:1; color:var(--ink); background:none; border:0; padding:0 14px 0 0; cursor:pointer;}
+.subbar h1{flex:1; text-align:center; font-size:19px; margin:0; padding-right:36px; font-weight:600;}
+#backdrop{position:fixed; inset:0; background:rgba(30,20,10,.45); opacity:0; pointer-events:none; transition:opacity .2s; z-index:40;}
+#backdrop.show{opacity:1; pointer-events:auto;}
+#sheet{position:fixed; left:50%; bottom:0; width:min(430px,100%); transform:translate(-50%,105%); transition:transform .25s ease; background:var(--surface); border-radius:20px 20px 0 0; z-index:41; padding:8px 0 20px; box-shadow:0 -4px 24px rgba(0,0,0,.25);}
+#sheet.show{transform:translate(-50%,0);}
+#sheet .grab{width:40px; height:4px; border-radius:2px; background:var(--chip-line); margin:6px auto 10px;}
+#sheet h2{font-size:17px; margin:4px 16px 8px;}
+#sheet .sheet-body{display:none;}
+#sheet .sheet-body.on{display:block;}
+.swatches{display:grid; grid-template-columns:repeat(4, 48px); gap:16px; padding:6px 16px 4px; justify-content:space-between;}
+.swb{display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer; background:none; border:0; padding:0;}
+.swb .box{width:48px; height:48px; border-radius:12px; position:relative; border:2px solid transparent;}
+.swb .nm{font-size:12px; color:var(--ink);}
+.swb.on .box{border-color:var(--accent);}
+.swb.on .box::after{content:"✓"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:20px; font-weight:700; text-shadow:0 1px 2px rgba(0,0,0,.4);}
+.scheme{display:flex; align-items:center; gap:10px; width:100%; background:none; border:0; border-bottom:1px solid var(--line); padding:14px 16px; font-size:16px; color:var(--ink); cursor:pointer; text-align:left;}
+.scheme:last-child{border-bottom:0;}
+.scheme .nm{flex:1;}
+.scheme .chk{color:var(--accent); font-weight:700;}
+#toast{position:fixed; left:50%; bottom:48px; transform:translateX(-50%) translateY(20px); background:#3D342C; color:#FFF7EF; font-size:14px; padding:10px 18px; border-radius:999px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:50; white-space:nowrap; max-width:92vw; overflow:hidden; text-overflow:ellipsis;}
+#toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
 @media (prefers-color-scheme: dark){
   :root{--bg:#171310; --surface:#221D18; --bar:#241E18; --ink:#F0EAE1; --sub:#A99D8D; --line:#3A3227; --accent:#B08D72; --accent-soft:#3A2E23; --accent-ink:#E3C9AF; --switch-off:#3A3227; --knob-off:#8B7F70; --chip-line:#4A4136;}
   body{background:#0E0C0A;}
@@ -132,14 +133,14 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
 </style>
 </head>
 <body>
-<div class="note"><b>样品 · 设置简化 WB_SPEC_228</b><br>按精准版做的：外观页去图标列、ⓘ 只留 2 个、下拉框改轻量行、色块 4 列、折叠收起低频项；作息时间页上午 / 下午 / 晚上三段折叠，默认只展开当前时段（现在是晚上）。点组标题可以展开 / 收起，开关和选项都能点。</div>
+<div class="note"><b>样品 v2 · 设置简化 WB_SPEC_228 拆子页版</b><br>按 Argon 第二轮方案改的：父页只剩入口行，滑杆和折叠全部赶出父页；网格、卡片、字体、节次规则各进一个子页，点进去平铺，顶上带小预览。点「课表网格与表头」「课程卡片样式」「全局显示字体」「节次数量与分段」可以进子页，点左上角 ‹ 回来；点主题色、课程配色、一键套用会从底部弹选择器。</div>
 <div class="phone">
-  <div class="tabs">
+  <div class="tabs" id="tabs">
     <button id="tabA" class="on" onclick="showPage('A')">外观</button>
     <button id="tabB" onclick="showPage('B')">作息时间</button>
   </div>
 
-  <!-- ============ 外观页 ============ -->
+  <!-- ============ 外观父页 ============ -->
   <div class="page on" id="pageA">
     <div class="appbar"><button class="back" onclick="toast('样品：返回设置首页')">‹</button><h1>外观</h1></div>
 
@@ -153,78 +154,90 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
       </div>
     </div>
 
-    <div class="ghead">色彩与主题</div>
-    <div class="seg" id="segTheme">
-      <button class="on" onclick="seg(this)">✓ 跟随系统</button>
-      <button onclick="seg(this)">☀ 浅色</button>
-      <button onclick="seg(this)">◐ 深色</button>
-    </div>
-    <div class="swatches">
-      <button class="swb" onclick="sw(this)"><span class="box" style="background:#4E7D6A"></span><span class="nm">雾绿</span></button>
-      <button class="swb" onclick="sw(this)"><span class="box" style="background:#4A7AB5"></span><span class="nm">海盐蓝</span></button>
-      <button class="swb" onclick="sw(this)"><span class="box" style="background:#7E63B0"></span><span class="nm">葡萄紫</span></button>
-      <button class="swb" onclick="sw(this)"><span class="box" style="background:#DE6B38"></span><span class="nm">落日橙</span></button>
-      <button class="swb" onclick="sw(this)"><span class="box" style="background:#D65A7E"></span><span class="nm">玫瑰粉</span></button>
-      <button class="swb on" onclick="sw(this)"><span class="box" style="background:#7A5230"></span><span class="nm">可可棕</span></button>
-      <button class="swb" onclick="sw(this)"><span class="box" style="background:#4A5568"></span><span class="nm">曜石灰</span></button>
-    </div>
-    <button class="custom-row" onclick="toast('样品：打开取色器选自定义颜色')">🎨&nbsp; 自定义颜色</button>
-    <button class="pick" onclick="toast('样品：点开弹底部选择器选课程配色')"><span class="name">课程配色</span><span class="v">复古 · 胶片馆</span><span class="chev">›</span></button>
-    <button class="sub-btn" onclick="toast('样品：已同步推荐界面主题色')">同步应用推荐界面主题色</button>
+    <div class="ghead">色彩与字体</div>
+    <div class="row"><div class="t"><div class="name">深浅模式</div></div><span class="seg-sm" id="segTheme"><button class="on" onclick="seg(this)">✓ 跟随系统</button><button onclick="seg(this)">浅色</button><button onclick="seg(this)">深色</button></span></div>
+    <button class="pick" onclick="openSheet('theme')"><span class="name">界面主题色</span><span class="v"><span class="dot" id="themeDot" style="background:#7A5230"></span><span id="themeName">可可棕</span></span><span class="chev">›</span></button>
+    <button class="pick" onclick="openSheet('scheme')"><span class="name">课程卡片配色</span><span class="v"><span class="dots"><i style="background:#F2C4A0"></i><i style="background:#A8C4DE"></i><i style="background:#F2D98C"></i><i style="background:#A8D5B5"></i></span><span id="schemeName">复古 · 胶片馆</span></span><span class="chev">›</span></button>
+    <button class="pick" onclick="openSub('subFont')"><span class="name">全局显示字体</span><span class="v">系统默认</span><span class="chev">›</span></button>
 
-    <div class="ghead">课表网格与表头</div>
-    <div class="row"><div class="t"><div class="name">周末无课时自动收起周六日</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
-    <div class="row"><div class="t"><div class="name">显示网格线</div></div><button class="sw" onclick="tog(this)" aria-label="开关"></button></div>
-    <div class="row"><div class="t"><div class="name">今天整列边框高亮</div></div><button class="sw" onclick="tog(this)" aria-label="开关"></button></div>
-    <div class="row"><div class="t"><div class="name">显示非本周课程</div></div><button class="sw" onclick="tog(this)" aria-label="开关"></button></div>
-    <div class="fold" id="foldGrid">
-      <button onclick="fold('foldGrid')"><span>更多网格设置</span><span class="cnt">5 项</span><span class="arr">›</span></button>
-      <div class="body"><div><div class="inner">
-        <div class="row"><div class="t"><div class="name">行高自适应一屏 <i class="info" onclick="toast('自适应时格子高度随屏幕自动算，不用手动调')">i</i></div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
-        <div class="slider-row"><span class="name">课程格子高度</span><span class="track"><span class="fill" style="width:18%"></span><span class="thumb" style="left:18%"></span></span><span class="val">自适应中</span></div>
-        <div class="slider-row"><span class="name">格子边框粗细</span><span class="track"><span class="fill" style="width:42%"></span><span class="thumb" style="left:42%"></span></span><span class="val">2.1 px</span></div>
-        <div class="row"><div class="t"><div class="name">节数栏显示时间</div><div class="sub">左侧节数栏显示每节上下课时间</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
-        <div class="row"><div class="t"><div class="name">标题显示单双周</div><div class="sub">标题栏显示当前周是单周还是双周</div></div><button class="sw" onclick="tog(this)" aria-label="开关"></button></div>
-      </div></div></div>
-    </div>
+    <div class="ghead">课表排版与细节</div>
+    <button class="pick" onclick="openSub('subGrid')"><span class="t" style="flex:1; min-width:0; text-align:left;"><span class="name" style="font-weight:500; display:block;">课表网格与表头</span><span class="sub" style="font-size:12px; color:var(--sub); display:block; margin-top:2px;">周末收起、非本周课程、行高与网格线</span></span><span class="v">自适应</span><span class="chev">›</span></button>
+    <button class="pick" onclick="openSub('subCard')"><span class="t" style="flex:1; min-width:0; text-align:left;"><span class="name" style="font-weight:500; display:block;">课程卡片样式</span><span class="sub" style="font-size:12px; color:var(--sub); display:block; margin-top:2px;">卡片圆角、字号大小、教室与教师显示</span></span><span class="v">12px · 100%</span><span class="chev">›</span></button>
 
-    <div class="ghead">课程卡片样式与字体</div>
-    <div class="slider-row"><span class="name">格子圆角半径</span><span class="track"><span class="fill" style="width:55%"></span><span class="thumb" style="left:55%"></span></span><span class="val">12 px</span></div>
-    <div class="slider-row"><span class="name">卡片文字大小</span><span class="track"><span class="fill" style="width:40%"></span><span class="thumb" style="left:40%"></span></span><span class="val">100%</span></div>
-    <div class="row"><div class="t"><div class="name">显示教室</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
-    <div class="fold" id="foldCard">
-      <button onclick="fold('foldCard')"><span>更多卡片设置</span><span class="cnt">3 项</span><span class="arr">›</span></button>
-      <div class="body"><div><div class="inner">
-        <div class="row"><div class="t"><div class="name">显示老师</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
-        <div class="row"><div class="t"><div class="name">显示备注</div><div class="sub">备注过长时自动省略</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
-        <button class="pick" onclick="toast('样品：点开弹底部选择器选字体')"><span class="name">显示字体</span><span class="v">系统默认</span><span class="chev">›</span></button>
-        <button class="sub-btn" onclick="toast('样品：从手机里选 TTF / OTF 字体文件')">导入字体文件</button>
-        <div class="sub-note">从手机里选 TTF / OTF 字体，导入后立即全 App 生效</div>
-      </div></div></div>
-    </div>
-
-    <div class="ghead">导航与交互动效</div>
-    <div class="row"><div class="t"><div class="name">底部栏显示 <i class="info" onclick="toast('关闭后设置改从右上角菜单进入')">i</i></div><div class="sub">开启后切换课表与设置更方便</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
-    <div class="row" style="border-bottom:0"><div class="t"><div class="name">切换动效</div><div class="sub">课表与设置之间切换时的动效，默认柔和</div></div></div>
-    <div class="chips" id="chipsAnim">
-      <button onclick="chip(this)">灵动</button>
-      <button class="on" onclick="chip(this)">✓ 柔和</button>
-      <button onclick="chip(this)">疾速</button>
-    </div>
+    <div class="ghead">导航与底栏</div>
+    <div class="row" style="min-height:72px;"><div class="t"><div class="name">底部栏显示</div><div class="sub">关闭后可从主页右上角菜单进入设置</div></div><button class="sw on" onclick="togBottom(this)" aria-label="开关"></button></div>
+    <button class="pick" id="animRow" onclick="toast('样品：点开弹底部选择器选动效')"><span class="name">页面切换动效</span><span class="v">柔和</span><span class="chev">›</span></button>
     <div style="height:24px"></div>
   </div>
 
-  <!-- ============ 作息时间页 ============ -->
+  <!-- ============ 子页：网格与表头设置 ============ -->
+  <div class="page" id="subGrid">
+    <div class="subbar"><button class="back" onclick="goBack()">‹</button><h1>网格与表头设置</h1></div>
+    <div class="ghead">实时预览</div>
+    <div class="preview">
+      <div class="pv-head"><span>11月</span><span>第 9 周</span></div>
+      <div class="pv-grid">
+        <div></div><div class="hd">日 8</div><div class="hd">一 9</div>
+        <div class="num">1<br>08:00</div><div class="cell c1">药理学<br>教 3-201</div><div class="cell c2">有机化学<br>实验楼 402</div>
+        <div class="num">2<br>08:50</div><div class="cell c1">药理学<br>周老师</div><div></div>
+      </div>
+    </div>
+    <div class="ghead">显示规则</div>
+    <div class="row"><div class="t"><div class="name">周末无课时自动收起周六日</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
+    <div class="row"><div class="t"><div class="name">显示非本周课程</div></div><button class="sw" onclick="tog(this)" aria-label="开关"></button></div>
+    <div class="row"><div class="t"><div class="name">今天整列边框高亮</div></div><button class="sw" onclick="tog(this)" aria-label="开关"></button></div>
+    <div class="row"><div class="t"><div class="name">节数栏显示时间</div><div class="sub">左侧节数栏显示每节上下课时间</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
+    <div class="row"><div class="t"><div class="name">标题显示单双周</div><div class="sub">标题栏显示当前周是单周还是双周</div></div><button class="sw" onclick="tog(this)" aria-label="开关"></button></div>
+    <div class="ghead">尺寸与网格线</div>
+    <div class="row"><div class="t"><div class="name">行高自适应一屏 <i class="info" onclick="toast('自适应时格子高度随屏幕自动算，不用手动调')">i</i></div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
+    <div class="slider-row"><span class="name">课程格子高度</span><span class="track"><span class="fill" style="width:18%"></span><span class="thumb" style="left:18%"></span></span><span class="val">自适应中</span></div>
+    <div class="row"><div class="t"><div class="name">显示网格线</div></div><button class="sw" onclick="tog(this)" aria-label="开关"></button></div>
+    <div class="slider-row"><span class="name">格子边框粗细</span><span class="track"><span class="fill" style="width:42%"></span><span class="thumb" style="left:42%"></span></span><span class="val">2.1 px</span></div>
+    <div style="height:24px"></div>
+  </div>
+
+  <!-- ============ 子页：课程卡片样式 ============ -->
+  <div class="page" id="subCard">
+    <div class="subbar"><button class="back" onclick="goBack()">‹</button><h1>课程卡片样式</h1></div>
+    <div class="ghead">实时预览</div>
+    <div class="preview">
+      <div class="pv-head"><span>11月</span><span>第 9 周</span></div>
+      <div class="pv-grid">
+        <div></div><div class="hd">日 8</div><div class="hd">一 9</div>
+        <div class="num">1<br>08:00</div><div class="cell c1">药理学<br>教 3-201</div><div class="cell c2">有机化学<br>实验楼 402</div>
+        <div class="num">2<br>08:50</div><div class="cell c1">药理学<br>周老师</div><div></div>
+      </div>
+    </div>
+    <div class="ghead">卡片样式</div>
+    <div class="slider-row"><span class="name">格子圆角半径</span><span class="track"><span class="fill" style="width:55%"></span><span class="thumb" style="left:55%"></span></span><span class="val">12 px</span></div>
+    <div class="slider-row"><span class="name">卡片文字大小</span><span class="track"><span class="fill" style="width:40%"></span><span class="thumb" style="left:40%"></span></span><span class="val">100%</span></div>
+    <div class="row"><div class="t"><div class="name">显示教室</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
+    <div class="row"><div class="t"><div class="name">显示老师</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
+    <div class="row"><div class="t"><div class="name">显示备注</div><div class="sub">备注过长时自动省略</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
+    <div style="height:24px"></div>
+  </div>
+
+  <!-- ============ 子页：显示字体 ============ -->
+  <div class="page" id="subFont">
+    <div class="subbar"><button class="back" onclick="goBack()">‹</button><h1>显示字体</h1></div>
+    <div class="ghead">字体</div>
+    <button class="pick" onclick="pickFont(this)"><span class="name">系统默认</span><span class="v chk" style="color:var(--accent); font-weight:700;">✓</span></button>
+    <button class="pick" onclick="pickFont(this)"><span class="name">得意黑</span><span class="v"></span></button>
+    <button class="pick" onclick="pickFont(this)"><span class="name">思源黑体</span><span class="v"></span></button>
+    <button class="sub-btn" onclick="toast('样品：从手机里选 TTF / OTF 字体文件')">导入字体文件</button>
+    <div class="sub-note">从手机里选 TTF / OTF 字体，导入后立即全 App 生效</div>
+    <div style="height:24px"></div>
+  </div>
+
+  <!-- ============ 作息时间父页 ============ -->
   <div class="page" id="pageB">
     <div class="appbar"><button class="back" onclick="toast('样品：返回设置首页')">‹</button><h1>作息时间</h1></div>
 
-    <div class="card"><div class="ct"><div class="t"><div class="name">一键套用常用大节时间</div><div class="sub">第 1-2 节 09:40-12:00，第 3-4 节 14:00-16:20</div></div><button class="tonal" onclick="toast('样品：已套用常用大节时间')">套用</button></div></div>
-    <div class="card"><div class="ct"><div class="t"><div class="name">每日节次总数</div><div class="sub">可自定义 4 ~ 20 节</div></div><span class="stepper"><button onclick="toast('样品：节次总数 −1')">−</button><b>13 节</b><button onclick="toast('样品：节次总数 +1')">＋</button></span></div></div>
-    <div class="card"><div class="ct"><div class="t"><div class="name">分段设置</div><div class="sub">午休在第 5 节后 · 晚餐在第 9 节后</div></div></div></div>
-    <div class="card"><div class="ct"><div class="t"><div class="name">休息时段</div><div class="sub">午休 / 晚间显隐 + 自定义起止时间</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div></div>
+    <div class="ghead">全局规则</div>
+    <button class="pick" onclick="openSub('subRule')"><span class="name">节次数量与分段</span><span class="v">共 13 节 (5-4-4) · 含午休晚餐</span><span class="chev">›</span></button>
+    <button class="pick" onclick="openSheet('preset')"><span class="name">一键套用与批量推算</span><span class="v">按首节与课间推算</span><span class="chev">›</span></button>
 
-    <div class="hint">当前共 13 节课，点击时间即可修改，修改即时生效。</div>
-
+    <div class="ghead">各节上下课时间（点击时间直接修改）</div>
     <div class="fold" id="foldAm">
       <button onclick="fold('foldAm')"><span>上午</span><span class="cnt">5 节 · 08:00–12:00</span><span class="arr">›</span></button>
       <div class="body"><div><div class="inner" style="border-top:0; padding-bottom:8px;">
@@ -233,9 +246,9 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
         <div class="slot"><span class="no">3</span><span class="tm"><button>▷ 09:40</button><span class="sep">~</span><button>▢ 10:20</button></span></div>
         <div class="slot"><span class="no">4</span><span class="tm"><button>▷ 10:30</button><span class="sep">~</span><button>▢ 11:10</button></span></div>
         <div class="slot"><span class="no">5</span><span class="tm"><button>▷ 11:20</button><span class="sep">~</span><button>▢ 12:00</button></span></div>
-        <div class="breakrow">🕐&nbsp; 午休 12:00 – 14:00 · 约 2 小时</div>
       </div></div></div>
     </div>
+    <div class="breakrow">☀️&nbsp; 午休 12:00 – 14:00 · 约 2 小时</div>
     <div class="fold" id="foldPm">
       <button onclick="fold('foldPm')"><span>下午</span><span class="cnt">4 节 · 14:00–17:10</span><span class="arr">›</span></button>
       <div class="body"><div><div class="inner" style="border-top:0; padding-bottom:8px;">
@@ -243,9 +256,9 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
         <div class="slot"><span class="no">7</span><span class="tm"><button>▷ 14:50</button><span class="sep">~</span><button>▢ 15:30</button></span></div>
         <div class="slot"><span class="no">8</span><span class="tm"><button>▷ 15:40</button><span class="sep">~</span><button>▢ 16:20</button></span></div>
         <div class="slot"><span class="no">9</span><span class="tm"><button>▷ 16:30</button><span class="sep">~</span><button>▢ 17:10</button></span></div>
-        <div class="breakrow">🕐&nbsp; 晚餐 17:10 – 18:00 · 约 50 分钟</div>
       </div></div></div>
     </div>
+    <div class="breakrow">🌙&nbsp; 晚餐 17:10 – 18:00 · 约 50 分钟</div>
     <div class="fold open" id="foldEv">
       <button onclick="fold('foldEv')"><span>晚上</span><span class="cnt">4 节 · 18:00–21:10</span><span class="arr">›</span></button>
       <div class="body"><div><div class="inner" style="border-top:0; padding-bottom:8px;">
@@ -258,23 +271,119 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
     </div>
     <div style="height:24px"></div>
   </div>
+
+  <!-- ============ 子页：节次数量与分段规则 ============ -->
+  <div class="page" id="subRule">
+    <div class="subbar"><button class="back" onclick="goBack()">‹</button><h1>节次数量与分段规则</h1></div>
+    <div class="ghead">节次数量</div>
+    <div class="row"><div class="t"><div class="name">每日节次总数</div><div class="sub">可自定义 4 ~ 20 节</div></div><span class="stepper"><button onclick="toast('样品：节次总数 −1')">−</button><b>13 节</b><button onclick="toast('样品：节次总数 +1')">＋</button></span></div>
+    <div class="ghead">分段设置</div>
+    <div class="row"><div class="t"><div class="name">午休在第 5 节后</div></div><span class="stepper"><button onclick="toast('样品：午休分段点 −1')">−</button><b>第 5 节</b><button onclick="toast('样品：午休分段点 +1')">＋</button></span></div>
+    <div class="row"><div class="t"><div class="name">晚餐在第 9 节后</div></div><span class="stepper"><button onclick="toast('样品：晚餐分段点 −1')">−</button><b>第 9 节</b><button onclick="toast('样品：晚餐分段点 +1')">＋</button></span></div>
+    <div class="ghead">休息时段</div>
+    <div class="row"><div class="t"><div class="name">休息时段</div><div class="sub">午休 / 晚间显隐 + 自定义起止时间</div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
+    <button class="pick" onclick="toast('样品：点开时间选择器改午休起止')"><span class="name">午休</span><span class="v">12:00 – 14:00</span><span class="chev">›</span></button>
+    <button class="pick" onclick="toast('样品：点开时间选择器改晚间起止')"><span class="name">晚间</span><span class="v">21:10 – 次日 07:00</span><span class="chev">›</span></button>
+    <div style="height:24px"></div>
+  </div>
+</div>
+
+<!-- 底部弹窗 -->
+<div id="backdrop" onclick="closeSheet()"></div>
+<div id="sheet">
+  <div class="grab"></div>
+  <div class="sheet-body" id="sheet-theme">
+    <h2>界面主题色</h2>
+    <div class="swatches">
+      <button class="swb" onclick="pickTheme(this,'#4E7D6A','雾绿')"><span class="box" style="background:#4E7D6A"></span><span class="nm">雾绿</span></button>
+      <button class="swb" onclick="pickTheme(this,'#4A7AB5','海盐蓝')"><span class="box" style="background:#4A7AB5"></span><span class="nm">海盐蓝</span></button>
+      <button class="swb" onclick="pickTheme(this,'#7E63B0','葡萄紫')"><span class="box" style="background:#7E63B0"></span><span class="nm">葡萄紫</span></button>
+      <button class="swb" onclick="pickTheme(this,'#DE6B38','落日橙')"><span class="box" style="background:#DE6B38"></span><span class="nm">落日橙</span></button>
+      <button class="swb" onclick="pickTheme(this,'#D65A7E','玫瑰粉')"><span class="box" style="background:#D65A7E"></span><span class="nm">玫瑰粉</span></button>
+      <button class="swb on" onclick="pickTheme(this,'#7A5230','可可棕')"><span class="box" style="background:#7A5230"></span><span class="nm">可可棕</span></button>
+      <button class="swb" onclick="pickTheme(this,'#4A5568','曜石灰')"><span class="box" style="background:#4A5568"></span><span class="nm">曜石灰</span></button>
+    </div>
+    <button class="sub-btn" onclick="toast('样品：打开取色器选自定义颜色')">🎨 自定义颜色</button>
+  </div>
+  <div class="sheet-body" id="sheet-scheme">
+    <h2>课程卡片配色</h2>
+    <button class="scheme" onclick="pickScheme(this,'复古 · 胶片馆')"><span class="dots"><i style="background:#F2C4A0"></i><i style="background:#A8C4DE"></i><i style="background:#F2D98C"></i><i style="background:#A8D5B5"></i></span><span class="nm">复古 · 胶片馆</span><span class="chk">✓</span></button>
+    <button class="scheme" onclick="pickScheme(this,'春日')"><span class="dots"><i style="background:#F7D1D1"></i><i style="background:#D6E8C8"></i><i style="background:#FDEBC8"></i><i style="background:#C8E0F0"></i></span><span class="nm">春日</span><span class="chk"></span></button>
+    <button class="scheme" onclick="pickScheme(this,'奶油')"><span class="dots"><i style="background:#F5E6D3"></i><i style="background:#E8D5C4"></i><i style="background:#D9C7B2"></i><i style="background:#CBB59D"></i></span><span class="nm">奶油</span><span class="chk"></span></button>
+    <button class="scheme" onclick="pickScheme(this,'多巴胺')"><span class="dots"><i style="background:#FF9F43"></i><i style="background:#FF6B81"></i><i style="background:#48DBFB"></i><i style="background:#1DD1A1"></i></span><span class="nm">多巴胺</span><span class="chk"></span></button>
+    <button class="sub-btn" onclick="toast('样品：已同步推荐界面主题色')">同步应用推荐界面主题色</button>
+  </div>
+  <div class="sheet-body" id="sheet-preset">
+    <h2>一键套用与批量推算</h2>
+    <button class="scheme" onclick="toast('样品：已套用常用大节时间'); closeSheet();"><span class="nm">常用大节时间</span><span class="val" style="color:var(--sub); font-size:13px;">第 1-2 节 09:40–12:00，第 3-4 节 14:00–16:20</span></button>
+    <button class="scheme" onclick="toast('样品：已按每节 45 分钟、课间 10 分钟推算'); closeSheet();"><span class="nm">每节 45 分钟</span><span class="val" style="color:var(--sub); font-size:13px;">课间 10 分钟，从首节 08:00 推算</span></button>
+    <button class="scheme" onclick="closeSheet()"><span class="nm" style="color:var(--sub);">取消</span></button>
+  </div>
 </div>
 <div id="toast"></div>
 <script>
-let toastTimer=null;
+let toastTimer=null, currentParent='pageA';
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),1800);}
 function showPage(p){
   document.getElementById('pageA').classList.toggle('on',p==='A');
   document.getElementById('pageB').classList.toggle('on',p==='B');
   document.getElementById('tabA').classList.toggle('on',p==='A');
   document.getElementById('tabB').classList.toggle('on',p==='B');
+  currentParent = p==='A' ? 'pageA' : 'pageB';
+  window.scrollTo(0,0);
+}
+function openSub(id){
+  currentParent = document.getElementById('pageA').classList.contains('on') ? 'pageA' : 'pageB';
+  document.getElementById('tabs').style.display='none';
+  document.getElementById('pageA').classList.remove('on');
+  document.getElementById('pageB').classList.remove('on');
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0,0);
+}
+function goBack(){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById(currentParent).classList.add('on');
+  document.getElementById('tabs').style.display='flex';
+  document.getElementById('tabA').classList.toggle('on', currentParent==='pageA');
+  document.getElementById('tabB').classList.toggle('on', currentParent==='pageB');
   window.scrollTo(0,0);
 }
 function fold(id){document.getElementById(id).classList.toggle('open');}
 function tog(el){el.classList.toggle('on');el.classList.toggle('off');}
+function togBottom(el){
+  el.classList.toggle('on');
+  document.getElementById('animRow').style.display = el.classList.contains('on') ? '' : 'none';
+  if(!el.classList.contains('on')) toast('底部栏已关闭，设置改从右上角菜单进入');
+}
 function seg(el){[...el.parentElement.children].forEach(b=>b.classList.remove('on'));el.classList.add('on');}
-function chip(el){[...el.parentElement.children].forEach(b=>{b.classList.remove('on');b.textContent=b.textContent.replace('✓ ','');});el.classList.add('on');el.textContent='✓ '+el.textContent;}
-function sw(el){document.querySelectorAll('.swatches .swb').forEach(b=>b.classList.remove('on'));el.classList.add('on');}
+function pickFont(el){
+  document.querySelectorAll('#subFont .pick .v').forEach(v=>{v.textContent='';v.classList.remove('chk');});
+  const v=el.querySelector('.v'); v.textContent='✓'; v.classList.add('chk');
+  document.querySelectorAll('#pageA .pick')[2].querySelector('.v').textContent = el.querySelector('.name').textContent;
+}
+function openSheet(kind){
+  document.getElementById('backdrop').classList.add('show');
+  document.getElementById('sheet').classList.add('show');
+  document.querySelectorAll('#sheet .sheet-body').forEach(b=>b.classList.remove('on'));
+  document.getElementById('sheet-'+kind).classList.add('on');
+}
+function closeSheet(){
+  document.getElementById('backdrop').classList.remove('show');
+  document.getElementById('sheet').classList.remove('show');
+}
+function pickTheme(el,color,name){
+  document.querySelectorAll('#sheet-theme .swb').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('themeDot').style.background=color;
+  document.getElementById('themeName').textContent=name;
+  closeSheet();
+}
+function pickScheme(el,name){
+  document.querySelectorAll('#sheet-scheme .chk').forEach(c=>c.textContent='');
+  el.querySelector('.chk').textContent='✓';
+  document.getElementById('schemeName').textContent=name;
+  closeSheet();
+}
 </script>
 </body>
 </html>
