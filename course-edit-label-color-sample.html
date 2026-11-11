@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>课程编辑页 · 两个小问题样品</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F6F1E8; color: #2B2620; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; padding: 20px 16px 48px; }
+  .wrap { max-width: 430px; margin: 0 auto; }
+  h1 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+  .sub { font-size: 13px; color: #6B5B4A; line-height: 1.6; margin-bottom: 22px; }
+  h2 { font-size: 16px; font-weight: 600; margin: 26px 0 4px; }
+  .sec-note { font-size: 13px; color: #6B5B4A; line-height: 1.6; margin-bottom: 14px; }
+  .opt { background: #FFFDF8; border: 1px solid #E5DDCF; border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+  .opt-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
+  .opt-name { font-size: 15px; font-weight: 600; }
+  .tag { font-size: 11px; color: #8A6D3B; background: #F5EEDD; border: 1px solid #E5D9BE; padding: 2px 7px; border-radius: 20px; white-space: nowrap; }
+  .tag.rec { color: #fff; background: #8A6D3B; border-color: #8A6D3B; }
+  .cap { font-size: 13px; color: #6B5B4A; line-height: 1.65; margin-top: 12px; }
+  .cap b { color: #2B2620; }
+
+  /* ---- 输入框 mock ---- */
+  .field { position: relative; border: 1px solid #8A7B68; border-radius: 10px; background: #E9E1D3; padding: 16px 14px 14px; margin-top: 20px; min-height: 58px; }
+  .field .val { font-size: 15px; color: #2B2620; }
+  .field .lbl { position: absolute; left: 10px; top: 0; transform: translateY(-50%); font-size: 13px; color: #6B5B4A; padding: 0 6px; white-space: nowrap; }
+  /* A 现状：双色衬底，分界线正好在字中间 */
+  .lbl-a { background: linear-gradient(to bottom, #F6F1E8 0%, #F6F1E8 50%, #E9E1D3 50%, #E9E1D3 100%); }
+  /* B 1A：整块页面底色垫片，线挪到字脚下 */
+  .lbl-b { background: #F6F1E8; border-radius: 4px; }
+  /* C 1B：标签整个站在框上方，框顶是完整横线 */
+  .field-c { margin-top: 30px; }
+  .lbl-c { top: -21px; transform: none; background: transparent; padding: 0 2px; }
+
+  /* ---- 颜色 mock ---- */
+  .swatches { display: flex; gap: 10px; flex-wrap: wrap; margin: 4px 0 12px; }
+  .sw { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #fff; }
+  .sw.sel { box-shadow: 0 0 0 2px #FFFDF8, 0 0 0 4px #8A6D3B; }
+  .inline-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; background: #F5EEDD; border: 1px solid #E5D9BE; border-radius: 10px; padding: 10px 12px; font-size: 13px; line-height: 1.5; }
+  .pill { display: inline-flex; align-items: center; gap: 5px; background: #fff; border: 1px solid #D8CDB8; border-radius: 20px; padding: 4px 10px; font-size: 13px; white-space: nowrap; }
+  .pill.on { background: #8A6D3B; border-color: #8A6D3B; color: #fff; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+  .slot { display: flex; align-items: center; gap: 9px; padding: 9px 2px; border-bottom: 1px solid #EFE8DA; font-size: 14px; }
+  .slot:last-child { border-bottom: none; }
+  .slot .wk { color: #6B5B4A; font-size: 13px; margin-left: auto; white-space: nowrap; }
+
+  /* ---- 弹窗 mock ---- */
+  .dlg { background: #FFFDF8; border: 1px solid #E5DDCF; border-radius: 14px; padding: 18px 16px 12px; box-shadow: 0 4px 18px rgba(60, 45, 20, .10); }
+  .dlg h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  .dlg p { font-size: 14px; color: #4A4238; line-height: 1.65; }
+  .dlg .btns { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
+  .dlg .btns .right { display: flex; gap: 4px; }
+  .btn { font-size: 14px; padding: 8px 12px; border-radius: 8px; }
+  .btn.txt { color: #8A6D3B; }
+  .btn.txt-red { color: #B3261E; }
+  .btn.fill { background: #8A6D3B; color: #fff; }
+
+  .foot { margin-top: 26px; font-size: 13px; color: #6B5B4A; line-height: 1.7; background: #FFFDF8; border: 1px solid #E5DDCF; border-radius: 14px; padding: 14px 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>课程编辑页 · 两个小问题样品</h1>
+  <p class="sub">按 Argon 的建议做的。三张输入框都是有内容时的浮起状态；颜色那两张用的是同一门课「药理学」，3 个时段。看完直接回我，比如「标签选 1B，颜色选内联」。</p>
+
+  <h2>一、输入框标签留空</h2>
+  <p class="sec-note">现在 2.3.0 的样子是 A：描边断开了，但填充色和页面底色的交界线还在字中间。</p>
+
+  <div class="opt">
+    <div class="opt-head"><span class="opt-name">A · 现状 2.3.0</span><span class="tag">你手机上现在就是这样</span></div>
+    <div class="field"><span class="lbl lbl-a">备注（可空）</span><span class="val">记得带实验记录本</span></div>
+    <p class="cap">线没穿过字，但那条<b>交界线还从字中间过</b>，放大看最明显。根因已确认：填充块顶边和页面底色在框顶那条线交汇，拼出来的色差线正好切过汉字正中。</p>
+  </div>
+
+  <div class="opt">
+    <div class="opt-head"><span class="opt-name">B · 方案 1A</span><span class="tag">改动最小</span></div>
+    <div class="field"><span class="lbl lbl-b">备注（可空）</span><span class="val">记得带实验记录本</span></div>
+    <p class="cap">缺口处整块涂成页面底色，<b>交界线挪到字脚下</b>，字中间是干净的纯色。只改边框那一个类，8 处输入框、下拉框、空态、深色都不用动。字脚下会有一圈很轻微的凹槽感。</p>
+  </div>
+
+  <div class="opt">
+    <div class="opt-head"><span class="opt-name">C · 方案 1B</span><span class="tag rec">推荐</span></div>
+    <div class="field field-c"><span class="lbl lbl-c">备注（可空）</span><span class="val">记得带实验记录本</span></div>
+    <p class="cap"><b>标签整个站在完整框顶的上方</b>，框顶是一条完整的横线，不穿字也不留缺口；空的时候标签照常印在框中间。就是你说的「字体移到背景框上方，线框跟着移动」那个意思。改动也是只动边框那一个类。</p>
+  </div>
+
+  <h2>二、改一节颜色，问不问应用到全部</h2>
+  <p class="sec-note">同一门课「药理学」有 3 个时段，点色块改了其中一节的颜色。</p>
+
+  <div class="opt">
+    <div class="opt-head"><span class="opt-name">A · 内联行，不弹窗</span><span class="tag rec">推荐</span></div>
+    <div class="swatches">
+      <span class="sw" style="background:#D8A7A0"></span>
+      <span class="sw sel" style="background:#A8B8C8">✓</span>
+      <span class="sw" style="background:#A9BFA8"></span>
+      <span class="sw" style="background:#C3B2C8"></span>
+      <span class="sw" style="background:#D9B48F"></span>
+      <span class="sw" style="background:#B8B0A6"></span>
+      <span class="sw" style="background:#8FA3B8"></span>
+      <span class="sw" style="background:#C8A2A2"></span>
+    </div>
+    <div class="inline-row">🎨 已更改颜色：<span class="pill on">● 应用到本课全部 3 个时段</span><span class="pill">○ 仅改本节</span></div>
+    <div style="margin-top:10px">
+      <div class="slot"><span class="dot" style="background:#A8B8C8"></span>周二&nbsp;第 1–2 节<span class="wk">2–21 周</span></div>
+      <div class="slot"><span class="dot" style="background:#A8B8C8"></span>周四&nbsp;第 3–4 节<span class="wk">2–21 周</span></div>
+      <div class="slot"><span class="dot" style="background:#A8B8C8"></span>周五&nbsp;第 10–13 节<span class="wk">2–21 周</span></div>
+    </div>
+    <p class="cap">点色块改颜色，色块下面<b>当场展开一行</b>让选，默认就是应用到全部；连点几个色块试颜色也不会被弹窗打断。「其他时段」每行前面多个小色点，选哪个，小色点就跟着变哪个，直观。以后只改老师不改颜色时，各时段自己的颜色不会被洗掉。</p>
+  </div>
+
+  <div class="opt">
+    <div class="opt-head"><span class="opt-name">B · 保存时弹确认框</span><span class="tag">备选</span></div>
+    <div class="dlg">
+      <h3>同步课程颜色</h3>
+      <p>你修改了课程颜色，是否将新颜色应用到《药理学》的全部 3 个时段？</p>
+      <div class="btns"><span class="btn txt">取消</span><span class="right"><span class="btn txt-red">仅改本节</span><span class="btn fill">应用到全部</span></span></div>
+    </div>
+    <p class="cap">试颜色的时候不打扰，点保存那一下才问一次。代价是保存时多点一次，而且万一撞上改名、时间冲突那些确认框，容易连着弹。</p>
+  </div>
+
+  <div class="foot">怎么选：直接回我就行，比如「标签选 1B，颜色选内联」或者「标签选 1A，颜色要弹窗」。两个可以分开选，不用捆绑。定好了我就写规格、派活、同版本重发。</div>
+</div>
+</body>
+</html>
