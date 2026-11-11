@@ -55,7 +55,11 @@
   .field .topbar .seg.right { flex: 1; border-top-right-radius: 10px; }
   .field .topbar .gap-label {
     font-size: 12px; line-height: 1; color: #6B5D4C;
-    padding: 0 4px; background: transparent;
+    padding: 0 4px;
+    /* 关键：标签自带底色，把背后整圈边框的那段线盖住——上半是页背景，
+       下半是框内填充色，分界线正好压在边框线上，等于把有字的那段线留空。
+       之前透明底，框的顶边直接从字中间穿过去了。 */
+    background: linear-gradient(to bottom, #F6F1E8 0 50%, #E9E1D3 50% 100%);
     opacity: 0; transform: translateY(2px);
     transition: opacity .18s ease, transform .18s ease;
     white-space: nowrap;
