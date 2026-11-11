@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>编辑课程 · 输入框标签样品</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #F6F1E8;
+    color: #3E3428;
+    font-family: -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    padding: 24px 16px 40px;
+  }
+  .page { max-width: 420px; margin: 0 auto; }
+  h1 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+  .sub { font-size: 14px; line-height: 1.6; color: #6B5D4C; margin-bottom: 24px; }
+  .sub b { color: #3E3428; }
+  h2 { font-size: 15px; font-weight: 600; margin: 28px 0 4px; }
+  .hint { font-size: 13px; color: #6B5D4C; margin-bottom: 12px; line-height: 1.5; }
+  .tag {
+    display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 20px;
+    margin-bottom: 10px;
+  }
+  .tag.bad { background: #F3D9D2; color: #9B3B2E; }
+  .tag.good { background: #DCE8D5; color: #3F6B33; }
+
+  /* ---- 输入框：只做这一个框 ---- */
+  .field {
+    position: relative;
+    background: #E9E1D3;
+    border-radius: 10px;
+    height: 56px;
+    margin-top: 8px;
+  }
+  /* 下、左、右边框 + 圆角：用 outline 画整圈，再用顶栏盖掉上边 */
+  .field .box {
+    position: absolute; inset: 0;
+    border: 1px solid #D9CFC0;
+    border-radius: 10px;
+    pointer-events: none;
+  }
+  .field.focused .box { border-color: #8A6D4B; border-width: 1.5px; }
+  /* 顶边：左右两段线 + 中间标签位（有字的那段留空） */
+  .field .topbar {
+    position: absolute; top: -1px; left: 0; right: 0;
+    display: flex; align-items: center; height: 2px;
+    pointer-events: none;
+  }
+  .field .topbar .seg {
+    height: 1px; background: #D9CFC0;
+  }
+  .field.focused .topbar .seg { background: #8A6D4B; height: 1.5px; }
+  .field .topbar .seg.left { width: 12px; border-top-left-radius: 10px; }
+  .field .topbar .seg.right { flex: 1; border-top-right-radius: 10px; }
+  .field .topbar .gap-label {
+    font-size: 12px; line-height: 1; color: #6B5D4C;
+    padding: 0 4px; background: transparent;
+    opacity: 0; transform: translateY(2px);
+    transition: opacity .18s ease, transform .18s ease;
+    white-space: nowrap;
+  }
+  .field.floated .topbar .gap-label { opacity: 1; transform: translateY(0); }
+  .field.focused .topbar .gap-label { color: #8A6D4B; }
+  /* 框内：图标 + 文字 / 标签 */
+  .field .inner {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 16px;
+  }
+  .field .inner svg { flex: none; width: 22px; height: 22px; stroke: #6B5D4C; }
+  .field .inner .in-label {
+    font-size: 17px; color: #6B5D4C;
+    transition: opacity .15s ease;
+  }
+  .field.floated .inner .in-label { opacity: 0; }
+  .field input {
+    flex: 1; min-width: 0; border: none; outline: none; background: transparent;
+    font-size: 17px; color: #3E3428; font-family: inherit; padding: 0;
+  }
+  .field input::placeholder { color: #A89A86; }
+
+  /* ---- 改前：横线穿过字中间 ---- */
+  .field.broken .box { border-color: #D9CFC0; }
+  .field.broken .topbar { display: none; }
+  .field.broken .broken-label {
+    position: absolute; top: -8px; left: 12px;
+    font-size: 12px; line-height: 16px; color: #6B5D4C;
+    padding: 0 4px;
+    background: transparent;
+    pointer-events: none;
+  }
+  /* 横线直接从字中间穿过：顶边整根不断 */
+  .field.broken::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    border-top: 1px solid #D9CFC0; border-radius: 10px 10px 0 0;
+  }
+  .note {
+    margin-top: 28px; padding: 14px 16px;
+    background: #EFE8DA; border-radius: 10px;
+    font-size: 13px; line-height: 1.7; color: #6B5D4C;
+  }
+  .note b { color: #3E3428; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>输入框标签 · 样品</h1>
+  <p class="sub">就做编辑课程里 <b>「老师」这一个框</b>。问题：标签浮到边框上时，<b>边框的横线穿过了字的中间</b>。改法：<b>有字的那段边框留空</b>，线从字两边断开。</p>
+
+  <h2>改后（留空）</h2>
+  <p class="hint">点一下这个框，看标签浮上去——横线在字的位置是断开的。</p>
+  <div class="field" id="demoField">
+    <div class="box"></div>
+    <div class="topbar">
+      <span class="seg left"></span>
+      <span class="gap-label">老师（可空）</span>
+      <span class="seg right"></span>
+    </div>
+    <div class="inner">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg>
+      <span class="in-label">老师（可空）</span>
+      <input id="demoInput" type="text" autocomplete="off" aria-label="老师">
+    </div>
+  </div>
+
+  <h2>改前（有问题）</h2>
+  <p class="hint">现在就是这样：横线从「老师（可空）」四个字中间穿过去。</p>
+  <div class="field broken">
+    <div class="box"></div>
+    <span class="broken-label">老师（可空）</span>
+    <div class="inner">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg>
+      <span class="in-label" style="opacity:0">老师（可空）</span>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>改动范围：</b>编辑页 8 处带标签的输入框都按这个办法——课程名、老师、教室、星期、开始节次、结束节次、周次文本、备注，标签浮上去时，有字的那段边框留空。<br>
+    <b>不动的：</b>圆角、填充色、字号、图标、空着时标签印在框里的样子。深色模式同理，留空的那段不画线就行。
+  </div>
+</div>
+<script>
+  var field = document.getElementById('demoField');
+  var input = document.getElementById('demoInput');
+  function sync() {
+    var floated = document.activeElement === input || input.value.length > 0;
+    field.classList.toggle('floated', floated);
+    field.classList.toggle('focused', document.activeElement === input);
+  }
+  input.addEventListener('focus', sync);
+  input.addEventListener('blur', sync);
+  input.addEventListener('input', sync);
+  field.addEventListener('click', function () { input.focus(); });
+  sync();
+</script>
+</body>
+</html>
