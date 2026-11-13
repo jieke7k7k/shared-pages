@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>设置简化样品 · WB_SPEC_228 拆子页版＋线框</title>
+<title>设置简化样品 · WB_SPEC_228 拆子页版＋线框 v4</title>
 <style>
 :root{
   --bg:#F6F1EC; --surface:#FFFDF9; --bar:#EFE7DC; --ink:#211D19; --sub:#8B8378;
@@ -125,17 +125,22 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
 .scheme .chk{color:var(--accent); font-weight:700;}
 #toast{position:fixed; left:50%; bottom:48px; transform:translateX(-50%) translateY(20px); background:#3D342C; color:#FFF7EF; font-size:14px; padding:10px 18px; border-radius:999px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:50; white-space:nowrap; max-width:92vw; overflow:hidden; text-overflow:ellipsis;}
 #toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
-@media (prefers-color-scheme: dark){
-  :root{--bg:#171310; --surface:#221D18; --bar:#241E18; --ink:#F0EAE1; --sub:#A99D8D; --line:#3A3227; --accent:#B08D72; --accent-soft:#3A2E23; --accent-ink:#E3C9AF; --switch-off:#3A3227; --knob-off:#8B7F70; --chip-line:#4A4136;}
-  body{background:#0E0C0A;}
-  .phone{box-shadow:0 0 0 1px #3A3227, 0 8px 32px rgba(0,0,0,.5);}
-  .note{color:#A99D8D;} .note b{color:#E3D9CB;}
-  .sw.off::after{background:#4A4136;}
-  .preview .c1{background:#33523F; color:#CFE8D6;}
-  .preview .c2{background:#3A4A38; color:#CFE8D6;}
-  .gbox{border-color:rgba(255,255,255,.09);}
-  .gbox .row, .gbox .pick, .gbox .slider-row, .gbox .fold{border-bottom-color:rgba(255,255,255,.07);}
-}
+/* 死滑杆动态隐藏（Argon 补 2）：开关一变，滑杆行平滑收起/展开 */
+.slider-row{max-height:72px; transition:max-height .25s ease, padding .25s ease, opacity .25s ease;}
+.slider-row.gone{max-height:0; min-height:0; padding-top:0; padding-bottom:0; opacity:0; border-bottom:0;}
+.gbox .slider-row.gone{border-bottom:0;}
+.theme-tg{display:inline-flex; border:1px solid var(--chip-line); border-radius:999px; overflow:hidden; vertical-align:middle; margin-left:6px;}
+.theme-tg button{border:0; background:var(--surface); color:var(--ink); font-size:12px; padding:4px 10px; cursor:pointer;}
+.theme-tg button.on{background:var(--accent); color:#FFF7EF; font-weight:600;}
+html.dark{--bg:#171310; --surface:#221D18; --bar:#241E18; --ink:#F0EAE1; --sub:#A99D8D; --line:#3A3227; --accent:#B08D72; --accent-soft:#3A2E23; --accent-ink:#E3C9AF; --switch-off:#3A3227; --knob-off:#8B7F70; --chip-line:#4A4136;}
+html.dark body{background:#0E0C0A;}
+html.dark .phone{box-shadow:0 0 0 1px #3A3227, 0 8px 32px rgba(0,0,0,.5);}
+html.dark .note{color:#A99D8D;} html.dark .note b{color:#E3D9CB;}
+html.dark .sw.off::after{background:#4A4136;}
+html.dark .preview .c1{background:#33523F; color:#CFE8D6;}
+html.dark .preview .c2{background:#3A4A38; color:#CFE8D6;}
+html.dark .gbox{border-color:rgba(255,255,255,.09);}
+html.dark .gbox .row, html.dark .gbox .pick, html.dark .gbox .slider-row, html.dark .gbox .fold{border-bottom-color:rgba(255,255,255,.07);}
 @media (max-width: 600px){
   .phone{box-shadow:none;}
   .note{padding:12px 14px 4px;}
@@ -143,7 +148,7 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
 </style>
 </head>
 <body>
-<div class="note"><b>样品 v3 · 设置简化 WB_SPEC_228 拆子页版＋线框</b><br>按 Argon 线框方案（形态 A）改的：每个分组标题留在框外左上方，子项包进 1.0dp 极淡灰线框（圆角 14dp），框内分隔线 0.5dp、左右缩进 16。点「课表网格与表头」「课程卡片样式」「全局显示字体」「节次数量与分段」可以进子页看里面的框，点左上角 ‹ 回来；点主题色、课程配色、一键套用会从底部弹选择器。</div>
+<div class="note"><b>样品 v4 · 228 拆子页版＋线框＋Argon 三处补齐</b><span class="theme-tg"><button id="tgDark" class="on" onclick="setTheme('dark')">深色</button><button id="tgLight" onclick="setTheme('light')">浅色</button></span><br>默认深色＋可可棕（跟你截图一样）。这次补的三处：① 父页三处已收成行——主题色是一行「界面主题色 ● 可可棕 ›」，同步那条链收进课程配色面板底部，切换动效是单行「页面切换动效 柔和 ›」；② 网格子页的死滑杆会动态隐藏——现在「行高自适应一屏」开着，课程格子高度那行是藏起来的，点一下开关关掉它就冒出来；「显示网格线」关着，格子边框粗细那行也是藏起来的，打开才冒出来；③ 深色线框已压到 9% 纯白。点「课表网格与表头」「课程卡片样式」「全局显示字体」「节次数量与分段」可以进子页看里面的框，点左上角 ‹ 回来；点主题色、课程配色、一键套用会从底部弹选择器。</div>
 <div class="phone">
   <div class="tabs" id="tabs">
     <button id="tabA" class="on" onclick="showPage('A')">外观</button>
@@ -208,10 +213,10 @@ body{margin:0; background:#E9E2D8; color:var(--ink); font-family:"Noto Sans CJK 
     </div>
 <div class="ghead">尺寸与网格线</div>
 <div class="gbox">
-    <div class="row"><div class="t"><div class="name">行高自适应一屏 <i class="info" onclick="toast('自适应时格子高度随屏幕自动算，不用手动调')">i</i></div></div><button class="sw on" onclick="tog(this)" aria-label="开关"></button></div>
-    <div class="slider-row"><span class="name">课程格子高度</span><span class="track"><span class="fill" style="width:18%"></span><span class="thumb" style="left:18%"></span></span><span class="val">自适应中</span></div>
-    <div class="row"><div class="t"><div class="name">显示网格线</div></div><button class="sw" onclick="tog(this)" aria-label="开关"></button></div>
-    <div class="slider-row"><span class="name">格子边框粗细</span><span class="track"><span class="fill" style="width:42%"></span><span class="thumb" style="left:42%"></span></span><span class="val">2.1 px</span></div>
+    <div class="row"><div class="t"><div class="name">行高自适应一屏 <i class="info" onclick="toast('自适应时格子高度随屏幕自动算，不用手动调')">i</i></div></div><button class="sw on" onclick="togAdaptive(this)" aria-label="开关"></button></div>
+    <div class="slider-row gone" id="rowCellHeight"><span class="name">课程格子高度</span><span class="track"><span class="fill" style="width:18%"></span><span class="thumb" style="left:18%"></span></span><span class="val" id="cellHeightVal">自适应中</span></div>
+    <div class="row"><div class="t"><div class="name">显示网格线</div></div><button class="sw" onclick="togGridLines(this)" aria-label="开关"></button></div>
+    <div class="slider-row gone" id="rowBorderWidth"><span class="name">格子边框粗细</span><span class="track"><span class="fill" style="width:42%"></span><span class="thumb" style="left:42%"></span></span><span class="val">2.1 px</span></div>
     </div>
 <div style="height:24px"></div>
   </div>
@@ -384,6 +389,9 @@ function goBack(){
 }
 function fold(id){document.getElementById(id).classList.toggle('open');}
 function tog(el){el.classList.toggle('on');el.classList.toggle('off');}
+function togAdaptive(el){tog(el);const on=el.classList.contains('on');document.getElementById('rowCellHeight').classList.toggle('gone',on);document.getElementById('cellHeightVal').textContent=on?'自适应中':'64 px';}
+function togGridLines(el){tog(el);document.getElementById('rowBorderWidth').classList.toggle('gone',!el.classList.contains('on'));}
+function setTheme(m){document.documentElement.classList.toggle('dark',m==='dark');document.getElementById('tgDark').classList.toggle('on',m==='dark');document.getElementById('tgLight').classList.toggle('on',m!=='dark');}
 function togBottom(el){
   el.classList.toggle('on');
   document.getElementById('animRow').style.display = el.classList.contains('on') ? '' : 'none';
