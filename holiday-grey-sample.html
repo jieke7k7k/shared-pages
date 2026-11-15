@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>UI 样品 — 小马课表「周视图 · 节假日变灰」 (228/235 定版口径)</title>
+<style>
+  :root {
+    /* 默认种子色：可可棕 cocoa 0xFF8C6246 */
+    --seed: #8C6246;
+    --seed-rgb: 140, 98, 70;
+
+    /* 浅色模式基准：浅纸白 #FAFAF8 + 4% 种子倾向 */
+    --bg-base: #FAFAF8;
+    --surface: color-mix(in srgb, #FAFAF8 96%, var(--seed) 4%);
+    --card-bg: #FFFFFF;
+    --border-color: #E5E7EB;
+    --grid-line: #F0F1F3;
+
+    /* 字阶与灰度层级 */
+    --text-primary: #18181B;
+    --text-secondary: #52525B;
+    --text-tertiary: #71717A;
+    --text-muted: #A1A1AA;
+
+    /* 主题强调色 */
+    --primary: var(--seed);
+    --primary-soft: rgba(var(--seed-rgb), 0.11);
+    --primary-border: rgba(var(--seed-rgb), 0.28);
+    --badge-bg: #F4F4F5;
+
+    /* 节假日变灰卡片专用 Token (浅色) */
+    --holiday-card-bg: #F1F2F4;
+    --holiday-card-border: #E2E4E8;
+    --holiday-card-title: #8E9299;
+    --holiday-card-sub: #A6AAB2;
+    --holiday-pill-bg: #E4E6EB;
+    --holiday-pill-text: #71717A;
+    --holiday-col-tint: rgba(0, 0, 0, 0.015);
+  }
+
+  [data-theme="dark"] {
+    /* 深色模式基准：暗夜黑 #121214 + 4% 种子倾向 */
+    --bg-base: #121214;
+    --surface: color-mix(in srgb, #121214 96%, var(--seed) 4%);
+    --card-bg: #18191C;
+    --border-color: rgba(255, 255, 255, 0.09);
+    --grid-line: rgba(255, 255, 255, 0.05);
+
+    --text-primary: #F4F4F5;
+    --text-secondary: #A1A1AA;
+    --text-tertiary: #71717A;
+    --text-muted: #52525B;
+
+    --primary: color-mix(in srgb, var(--seed) 65%, #FFFFFF 35%);
+    --primary-soft: rgba(var(--seed-rgb), 0.22);
+    --primary-border: rgba(var(--seed-rgb), 0.42);
+    --badge-bg: #232429;
+
+    /* 节假日变灰卡片专用 Token (深色) */
+    --holiday-card-bg: #1E2024;
+    --holiday-card-border: rgba(255, 255, 255, 0.07);
+    --holiday-card-title: #6E717A;
+    --holiday-card-sub: #52555E;
+    --holiday-pill-bg: #2A2C32;
+    --holiday-pill-text: #8E9299;
+    --holiday-col-tint: rgba(255, 255, 255, 0.015);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Microsoft YaHei", sans-serif;
+    background-color: #ECECEE;
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 16px 12px 40px;
+    transition: background-color 0.2s ease;
+  }
+
+  [data-theme="dark"] body {
+    background-color: #09090B;
+  }
+
+  /* ================= 顶部样品控制台 ================= */
+  .workbench-bar {
+    width: 100%;
+    max-width: 420px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  }
+
+  .wb-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .wb-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .wb-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .wb-sub {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-tertiary);
+  }
+
+  /* iOS/M3 极简 Switch 开关 */
+  .switch-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .switch-state-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  .toggle-track {
+    width: 42px;
+    height: 24px;
+    border-radius: 12px;
+    background: var(--border-color);
+    position: relative;
+    transition: background-color 0.18s ease;
+  }
+
+  .toggle-track.on {
+    background: var(--primary);
+  }
+
+  .toggle-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  .toggle-track.on .toggle-thumb {
+    transform: translateX(18px);
+  }
+
+  .seg-group {
+    display: inline-flex;
+    background: var(--badge-bg);
+    padding: 2px;
+    border-radius: 8px;
+    gap: 2px;
+  }
+
+  .seg-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .seg-btn.active {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+
+  .theme-dots {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .theme-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease;
+  }
+  .theme-dot.active {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 1.5px var(--card-bg), 0 0 0 3px var(--seed);
+  }
+  .theme-dot svg {
+    width: 11px;
+    height: 11px;
+    stroke: #FFF;
+    stroke-width: 2.5;
+    opacity: 0;
+  }
+  .theme-dot.active svg {
+    opacity: 1;
+  }
+
+  /* ================= 375px 手机模拟器壳 ================= */
+  .phone-frame {
+    width: 375px;
+    max-width: 100%;
+    height: 760px;
+    background-color: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 28px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  /* 状态栏 28px */
+  .status-bar {
+    height: 28px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+
+  .status-icons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* 周视图顶部 AppBar */
+  .week-appbar {
+    height: 48px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .appbar-title-group {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .week-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.2px;
+  }
+
+  .holiday-summary-badge {
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .phone-frame.holiday-off .holiday-summary-badge {
+    display: none;
+  }
+
+  .appbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-secondary);
+  }
+
+  /* ================= 周视图星期与节假日表头 ================= */
+  .week-header {
+    display: grid;
+    grid-template-columns: 30px repeat(7, minmax(0, 1fr));
+    border-bottom: 0.5px solid var(--border-color);
+    padding: 4px 4px 6px 2px;
+    background: var(--surface);
+    flex-shrink: 0;
+  }
+
+  .month-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .day-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 1px;
+    border-radius: 8px;
+    position: relative;
+  }
+
+  .day-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    line-height: 1.2;
+  }
+
+  .day-sub {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* 节假日表头胶囊高亮（开启节假日功能时） */
+  .phone-frame:not(.holiday-off) .day-cell.is-holiday .day-name {
+    color: var(--text-tertiary);
+  }
+
+  .phone-frame:not(.holiday-off) .day-cell.is-holiday .day-sub.festival-name {
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  .rest-dot {
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1;
+    padding: 1.5px 3.5px;
+    border-radius: 4px;
+    background: var(--holiday-pill-bg);
+    color: var(--holiday-pill-text);
+    margin-top: 2px;
+  }
+
+  /* 关闭节假日开关时：隐藏「国庆/休」，恢复普通日期数字 */
+  .day-sub.normal-date {
+    display: none;
+  }
+  .phone-frame.holiday-off .day-cell.is-holiday .day-sub.festival-name,
+  .phone-frame.holiday-off .day-cell.is-holiday .rest-dot {
+    display: none;
+  }
+  .phone-frame.holiday-off .day-cell.is-holiday .day-sub.normal-date {
+    display: block;
+  }
+
+  /* ================= 课表网格区 ================= */
+  .grid-scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    scrollbar-width: none;
+  }
+  .grid-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .schedule-stage {
+    display: grid;
+    grid-template-columns: 30px repeat(7, minmax(0, 1fr));
+    /* 1-5节 + 午休带(24px) + 6-9节 + 晚餐带(24px) + 10-11节 */
+    grid-template-rows: repeat(5, 50px) 24px repeat(4, 50px) 24px repeat(2, 50px);
+    padding: 2px 4px 12px 2px;
+    position: relative;
+  }
+
+  /* 左侧节次时间轴 */
+  .sec-cell {
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 0.5px solid var(--border-color);
+    font-variant-numeric: tabular-nums;
+    padding-right: 2px;
+  }
+
+  .sec-num {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    line-height: 1.1;
+  }
+
+  .sec-time {
+    font-size: 8.5px;
+    color: var(--text-muted);
+    margin-top: 1px;
+    line-height: 1.05;
+  }
+
+  /* 节假日整列极淡底纹衬托 */
+  .holiday-col-bg {
+    grid-row: 1 / 14;
+    background: var(--holiday-col-tint);
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  .phone-frame.holiday-off .holiday-col-bg {
+    opacity: 0;
+  }
+
+  /* 午休与晚餐通栏分隔带 */
+  .band-row {
+    grid-column: 1 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    background: var(--surface);
+    border-top: 0.5px solid var(--grid-line);
+    border-bottom: 0.5px solid var(--grid-line);
+    z-index: 2;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ================= 课程卡片（正常彩色 vs 节假日变灰） ================= */
+  .c-card {
+    margin: 1.5px;
+    border-radius: 9px;
+    padding: 4px 4px 4px 4.5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    position: relative;
+    z-index: 3;
+    cursor: pointer;
+    transition: background-color 0.22s ease, border-color 0.22s ease, opacity 0.22s ease;
+    border: 1px solid transparent;
+  }
+
+  .c-card-top {
+    min-height: 0;
+  }
+
+  .c-title {
+    font-size: 10.5px;
+    font-weight: 700;
+    line-height: 1.22;
+    word-break: break-all;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.22s ease;
+  }
+
+  .c-room {
+    font-size: 9px;
+    font-weight: 600;
+    line-height: 1.15;
+    margin-top: 2px;
+    opacity: 0.9;
+    word-break: break-all;
+    transition: color 0.22s ease;
+  }
+
+  .c-teacher {
+    font-size: 8.5px;
+    font-weight: 500;
+    opacity: 0.78;
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.22s ease;
+  }
+
+  /* 假期角标 [休] */
+  .holiday-tag {
+    display: none;
+    align-self: flex-start;
+    font-size: 8.5px;
+    font-weight: 700;
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: var(--holiday-pill-bg);
+    color: var(--holiday-pill-text);
+    margin-bottom: 2px;
+    line-height: 1.1;
+  }
+
+  /* ★ 开启节假日变灰时，处于节假日列 (.is-holiday-course) 的课程卡样式 ★ */
+  .phone-frame:not(.holiday-off) .c-card.is-holiday-course {
+    background-color: var(--holiday-card-bg) !important;
+    border-color: var(--holiday-card-border) !important;
+  }
+
+  .phone-frame:not(.holiday-off) .c-card.is-holiday-course .c-title {
+    color: var(--holiday-card-title) !important;
+    font-weight: 600;
+  }
+
+  .phone-frame:not(.holiday-off) .c-card.is-holiday-course .c-room,
+  .phone-frame:not(.holiday-off) .c-card.is-holiday-course .c-teacher {
+    color: var(--holiday-card-sub) !important;
+  }
+
+  .phone-frame:not(.holiday-off) .c-card.is-holiday-course .holiday-tag {
+    display: inline-block;
+  }
+
+  /* ================= 235 定版：48dp 底部栏 ================= */
+  .bottom-bar {
+    height: 48px;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: stretch;
+    position: relative;
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  .tab-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    cursor: pointer;
+    color: var(--text-tertiary);
+    position: relative;
+  }
+
+  .tab-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 1.9;
+  }
+
+  .tab-btn span {
+    font-size: 10.5px;
+    line-height: 1.1;
+    font-weight: 400;
+  }
+
+  .tab-btn.active {
+    color: var(--primary);
+  }
+  .tab-btn.active span {
+    font-weight: 600;
+  }
+  .tab-btn.active::after {
+    content: "";
+    position: absolute;
+    bottom: 2.5px;
+    width: 16px;
+    height: 2.5px;
+    border-radius: 2px;
+    background: var(--primary);
+  }
+</style>
+</head>
+<body>
+
+  <!-- 顶部演示控制台 -->
+  <div class="workbench-bar">
+    <!-- 核心演示项：节假日变灰开关 -->
+    <div class="wb-row">
+      <div>
+        <div class="wb-label">法定节假日课程变灰</div>
+        <div class="wb-sub">10月1日–7日国庆放假，周四至周日课程自动置灰</div>
+      </div>
+      <div class="switch-wrap" id="holidayToggle">
+        <span class="switch-state-text" id="holidayToggleText">已开启</span>
+        <div class="toggle-track on" id="holidayTrack">
+          <div class="toggle-thumb"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wb-row">
+      <span class="wb-label" id="themeNameLabel">界面主题 · 可可棕</span>
+      <div class="theme-dots" id="themeDots"></div>
+    </div>
+
+    <div class="wb-row">
+      <span class="wb-label">模式与课程配色</span>
+      <div style="display: flex; gap: 6px;">
+        <div class="seg-group" id="modeGroup">
+          <button class="seg-btn active" data-mode="light">浅色</button>
+          <button class="seg-btn" data-mode="dark">深色</button>
+        </div>
+        <div class="seg-group" id="paletteGroup">
+          <button class="seg-btn active" data-palette="film">复古·胶片</button>
+          <button class="seg-btn" data-palette="spring">春日·游园</button>
+          <button class="seg-btn" data-palette="soda">奶油·苏打</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 375px 手机模拟器视口 -->
+  <div class="phone-frame" id="phoneFrame">
+    <!-- 状态栏 -->
+    <div class="status-bar">
+      <span>09:41</span>
+      <div class="status-icons">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="10" rx="2"/><line x1="22" y1="11" x2="22" y2="13"/></svg>
+      </div>
+    </div>
+
+    <!-- 周视图顶栏 -->
+    <div class="week-appbar">
+      <div class="appbar-title-group">
+        <span class="week-title">第 5 周</span>
+        <span class="holiday-summary-badge">国庆假期 10.1–10.7</span>
+      </div>
+      <div class="appbar-actions">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+      </div>
+    </div>
+
+    <!-- 星期与日期表头（9.28 周一 ~ 10.4 周日，周四起为国庆假期） -->
+    <div class="week-header">
+      <div class="month-cell">
+        <span>10</span>
+        <span>月</span>
+      </div>
+      <!-- 周一 9/28 (正常上课) -->
+      <div class="day-cell">
+        <span class="day-name">一</span>
+        <span class="day-sub">9/28</span>
+      </div>
+      <!-- 周二 9/29 (正常上课) -->
+      <div class="day-cell">
+        <span class="day-name">二</span>
+        <span class="day-sub">9/29</span>
+      </div>
+      <!-- 周三 9/30 (正常上课) -->
+      <div class="day-cell">
+        <span class="day-name">三</span>
+        <span class="day-sub">9/30</span>
+      </div>
+      <!-- 周四 10/1 (国庆节放假) -->
+      <div class="day-cell is-holiday">
+        <span class="day-name">四</span>
+        <span class="day-sub festival-name">国庆节</span>
+        <span class="day-sub normal-date">10/1</span>
+        <span class="rest-dot">休</span>
+      </div>
+      <!-- 周五 10/2 (国庆放假) -->
+      <div class="day-cell is-holiday">
+        <span class="day-name">五</span>
+        <span class="day-sub festival-name">10/2</span>
+        <span class="day-sub normal-date">10/2</span>
+        <span class="rest-dot">休</span>
+      </div>
+      <!-- 周六 10/3 (国庆放假) -->
+      <div class="day-cell is-holiday">
+        <span class="day-name">六</span>
+        <span class="day-sub festival-name">10/3</span>
+        <span class="day-sub normal-date">10/3</span>
+        <span class="rest-dot">休</span>
+      </div>
+      <!-- 周日 10/4 (国庆放假) -->
+      <div class="day-cell is-holiday">
+        <span class="day-name">日</span>
+        <span class="day-sub festival-name">10/4</span>
+        <span class="day-sub normal-date">10/4</span>
+        <span class="rest-dot">休</span>
+      </div>
+    </div>
+
+    <!-- 课表主网格 -->
+    <div class="grid-scroll">
+      <div class="schedule-stage">
+        <!-- 节假日列极淡底纹 (周四~周日 = grid-column 5~8) -->
+        <div class="holiday-col-bg" style="grid-column: 5 / 9;"></div>
+
+        <!-- 左侧 1~5 节时间轴 -->
+        <div class="sec-cell" style="grid-row: 1;"><span class="sec-num">1</span><span class="sec-time">08:00</span></div>
+        <div class="sec-cell" style="grid-row: 2;"><span class="sec-num">2</span><span class="sec-time">08:50</span></div>
+        <div class="sec-cell" style="grid-row: 3;"><span class="sec-num">3</span><span class="sec-time">09:40</span></div>
+        <div class="sec-cell" style="grid-row: 4;"><span class="sec-num">4</span><span class="sec-time">10:30</span></div>
+        <div class="sec-cell" style="grid-row: 5;"><span class="sec-num">5</span><span class="sec-time">11:20</span></div>
+
+        <!-- 午休分隔带 (grid-row: 6) -->
+        <div class="band-row" style="grid-row: 6;">午休 12:00 – 14:00</div>
+
+        <!-- 左侧 6~9 节时间轴 -->
+        <div class="sec-cell" style="grid-row: 7;"><span class="sec-num">6</span><span class="sec-time">14:00</span></div>
+        <div class="sec-cell" style="grid-row: 8;"><span class="sec-num">7</span><span class="sec-time">14:50</span></div>
+        <div class="sec-cell" style="grid-row: 9;"><span class="sec-num">8</span><span class="sec-time">15:40</span></div>
+        <div class="sec-cell" style="grid-row: 10;"><span class="sec-num">9</span><span class="sec-time">16:30</span></div>
+
+        <!-- 晚餐分隔带 (grid-row: 11) -->
+        <div class="band-row" style="grid-row: 11;">晚餐 17:10 – 18:00</div>
+
+        <!-- 左侧 10~11 节时间轴 -->
+        <div class="sec-cell" style="grid-row: 12;"><span class="sec-num">10</span><span class="sec-time">18:00</span></div>
+        <div class="sec-cell" style="grid-row: 13;"><span class="sec-num">11</span><span class="sec-time">18:50</span></div>
+
+        <!-- ========== 正常上课日课程（周一至周三：始终保持彩色） ========== -->
+        <!-- 周一 1-2节：天然药物化学 -->
+        <div class="c-card" data-color-idx="0" style="grid-column: 2; grid-row: 1 / 3;">
+          <div class="c-card-top">
+            <div class="c-title">天然药物化学</div>
+            <div class="c-room">@教 2-104</div>
+          </div>
+          <div class="c-teacher">林教授</div>
+        </div>
+
+        <!-- 周一 3-4节：药理学 -->
+        <div class="c-card" data-color-idx="1" style="grid-column: 2; grid-row: 3 / 5;">
+          <div class="c-card-top">
+            <div class="c-title">药理学</div>
+            <div class="c-room">@教 3-201</div>
+          </div>
+          <div class="c-teacher">周老师</div>
+        </div>
+
+        <!-- 周二 1-2节：药物化学 -->
+        <div class="c-card" data-color-idx="2" style="grid-column: 3; grid-row: 1 / 3;">
+          <div class="c-card-top">
+            <div class="c-title">药物化学</div>
+            <div class="c-room">@教 1-305</div>
+          </div>
+          <div class="c-teacher">郑教授</div>
+        </div>
+
+        <!-- 周二 6-8节 (下午 = row 7~10)：药剂学实验 -->
+        <div class="c-card" data-color-idx="3" style="grid-column: 3; grid-row: 7 / 10;">
+          <div class="c-card-top">
+            <div class="c-title">药剂学实验</div>
+            <div class="c-room">@实验楼 402</div>
+          </div>
+          <div class="c-teacher">李老师</div>
+        </div>
+
+        <!-- 周三 3-5节：生物药剂学 -->
+        <div class="c-card" data-color-idx="4" style="grid-column: 4; grid-row: 3 / 6;">
+          <div class="c-card-top">
+            <div class="c-title">生物药剂学与药物动力学</div>
+            <div class="c-room">@教 3-102</div>
+          </div>
+          <div class="c-teacher">王教授</div>
+        </div>
+
+        <!-- 周三 10-11节 (晚上 = row 12~14)：歌剧鉴赏 -->
+        <div class="c-card" data-color-idx="0" style="grid-column: 4; grid-row: 12 / 14;">
+          <div class="c-card-top">
+            <div class="c-title">歌剧鉴赏</div>
+            <div class="c-room">@公教 105</div>
+          </div>
+          <div class="c-teacher">艺术学院</div>
+        </div>
+
+        <!-- ========== 法定节假日课程（周四 10/1 ~ 周日 10/4：开启时自动变灰） ========== -->
+        <!-- 周四 (10/1 国庆节) 1-2节：药理学 -->
+        <div class="c-card is-holiday-course" data-color-idx="1" style="grid-column: 5; grid-row: 1 / 3;">
+          <div class="c-card-top">
+            <span class="holiday-tag">国庆休</span>
+            <div class="c-title">药理学</div>
+            <div class="c-room">@教 3-201</div>
+          </div>
+          <div class="c-teacher">周老师</div>
+        </div>
+
+        <!-- 周四 (10/1 国庆节) 6-8节：药物分析实验 -->
+        <div class="c-card is-holiday-course" data-color-idx="2" style="grid-column: 5; grid-row: 7 / 10;">
+          <div class="c-card-top">
+            <span class="holiday-tag">国庆休</span>
+            <div class="c-title">药物分析实验</div>
+            <div class="c-room">@药学楼 B302</div>
+          </div>
+          <div class="c-teacher">陈老师</div>
+        </div>
+
+        <!-- 周五 (10/2 假期) 3-4节：药物化学 -->
+        <div class="c-card is-holiday-course" data-color-idx="2" style="grid-column: 6; grid-row: 3 / 5;">
+          <div class="c-card-top">
+            <span class="holiday-tag">休假</span>
+            <div class="c-title">药物化学</div>
+            <div class="c-room">@教 1-305</div>
+          </div>
+          <div class="c-teacher">郑教授</div>
+        </div>
+
+        <!-- 周五 (10/2 假期) 7-8节：药事管理学 -->
+        <div class="c-card is-holiday-course" data-color-idx="4" style="grid-column: 6; grid-row: 8 / 10;">
+          <div class="c-card-top">
+            <span class="holiday-tag">休假</span>
+            <div class="c-title">药事管理学</div>
+            <div class="c-room">@教 2-208</div>
+          </div>
+          <div class="c-teacher">赵老师</div>
+        </div>
+
+        <!-- 周六 (10/3 假期) 1-4节：临床药物治疗学 -->
+        <div class="c-card is-holiday-course" data-color-idx="3" style="grid-column: 7; grid-row: 1 / 5;">
+          <div class="c-card-top">
+            <span class="holiday-tag">休假</span>
+            <div class="c-title">临床药物治疗学</div>
+            <div class="c-room">@阶梯教室 1</div>
+          </div>
+          <div class="c-teacher">孙主任</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部导航栏：235 定版 48dp（当前处于「课表」Tab） -->
+    <div class="bottom-bar">
+      <div class="tab-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="3"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <span>今日</span>
+      </div>
+      <div class="tab-btn active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+          <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+          <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+          <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+        </svg>
+        <span>课表</span>
+      </div>
+      <div class="tab-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>我的</span>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // 1. 7 套界面主题（默认可可棕 cocoa）
+  const THEMES = [
+    { id: 'cocoa',    name: '可可棕', hex: '#8C6246', rgb: '140, 98, 70' },
+    { id: 'forest',   name: '雾绿',   hex: '#3E7B67', rgb: '62, 123, 103' },
+    { id: 'ocean',    name: '海盐蓝', hex: '#3B6E9C', rgb: '59, 110, 156' },
+    { id: 'grape',    name: '葡萄紫', hex: '#6B5B95', rgb: '107, 91, 149' },
+    { id: 'sunset',   name: '落日橙', hex: '#D96B43', rgb: '217, 107, 67' },
+    { id: 'rose',     name: '玫瑰粉', hex: '#C85A7C', rgb: '200, 90, 124' },
+    { id: 'graphite', name: '曜石灰', hex: '#475569', rgb: '71, 85, 105' }
+  ];
+
+  // 2. 保留的课程配色方案（已严格剔除待删的 3 套：薄荷·清新 / 葡萄·紫藤 / 落日·暖阳）
+  // 每套提供浅色底/深色字 与 深色底/浅色字
+  const COURSE_PALETTES = {
+    film: [
+      { bgL: '#EFE5DF', fgL: '#694331', bgD: '#3B2B24', fgD: '#E8CFC4' },
+      { bgL: '#E1ECE9', fgL: '#32564D', bgD: '#223833', fgD: '#BCE0D7' },
+      { bgL: '#F3E7DB', fgL: '#784C24', bgD: '#3D2E20', fgD: '#EDD2B7' },
+      { bgL: '#E6E5EE', fgL: '#474566', bgD: '#2B2A3D', fgD: '#D0CFE6' },
+      { bgL: '#EFE2E4', fgL: '#6E3B44', bgD: '#3B2529', fgD: '#E8C5CB' }
+    ],
+    spring: [
+      { bgL: '#E3F0E2', fgL: '#335E31', bgD: '#233822', fgD: '#C1E3BF' },
+      { bgL: '#F9E5DF', fgL: '#823B28', bgD: '#402620', fgD: '#F2C6B8' },
+      { bgL: '#E1E9F6', fgL: '#2D4875', bgD: '#222F45', fgD: '#C2D5F2' },
+      { bgL: '#F4E3E6', fgL: '#733740', bgD: '#3D2529', fgD: '#EBC2C8' },
+      { bgL: '#F5EEDB', fgL: '#6B5522', bgD: '#3B3320', fgD: '#EBE0B9' }
+    ],
+    soda: [
+      { bgL: '#E0EFFB', fgL: '#245885', bgD: '#1F3347', fgD: '#BCE0FD' },
+      { bgL: '#E3F4FE', fgL: '#1F5D82', bgD: '#1D3647', fgD: '#C4E9FE' },
+      { bgL: '#FDE8E6', fgL: '#823A33', bgD: '#422624', fgD: '#FAC7C3' },
+      { bgL: '#E7EAF0', fgL: '#3E4759', bgD: '#282C36', fgD: '#CFD6E6' },
+      { bgL: '#E4F2EE', fgL: '#285E50', bgD: '#203832', fgD: '#C2E6DC' }
+    ]
+  };
+
+  let currentTheme = THEMES[0];
+  let currentPalette = 'film';
+  let isDark = false;
+  let holidayGrayEnabled = true;
+
+  const phoneFrame = document.getElementById('phoneFrame');
+  const holidayToggle = document.getElementById('holidayToggle');
+  const holidayTrack = document.getElementById('holidayTrack');
+  const holidayToggleText = document.getElementById('holidayToggleText');
+  const dotsContainer = document.getElementById('themeDots');
+  const themeNameLabel = document.getElementById('themeNameLabel');
+
+  function renderThemeDots() {
+    dotsContainer.innerHTML = '';
+    THEMES.forEach(t => {
+      const btn = document.createElement('button');
+      btn.className = 'theme-dot' + (t.id === currentTheme.id ? ' active' : '');
+      btn.style.backgroundColor = t.hex;
+      btn.title = t.name;
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>`;
+      btn.onclick = () => {
+        currentTheme = t;
+        applyStyles();
+        renderThemeDots();
+      };
+      dotsContainer.appendChild(btn);
+    });
+  }
+
+  function applyStyles() {
+    const root = document.documentElement;
+    root.style.setProperty('--seed', currentTheme.hex);
+    root.style.setProperty('--seed-rgb', currentTheme.rgb);
+    themeNameLabel.textContent = `界面主题 · ${currentTheme.name}`;
+
+    if (isDark) {
+      root.setAttribute('data-theme', 'dark');
+    } else {
+      root.removeAttribute('data-theme');
+    }
+
+    // 渲染每张课程卡片的原本配色（当节假日变灰开启时，CSS 的 .is-holiday-course 会自动覆盖为中性灰）
+    const palette = COURSE_PALETTES[currentPalette] || COURSE_PALETTES.film;
+    document.querySelectorAll('.c-card').forEach(card => {
+      const idx = parseInt(card.getAttribute('data-color-idx') || '0', 10);
+      const item = palette[idx % palette.length];
+      const bg = isDark ? item.bgD : item.bgL;
+      const fg = isDark ? item.fgD : item.fgL;
+      card.style.backgroundColor = bg;
+      card.style.color = fg;
+    });
+  }
+
+  // 切换「节假日变灰」开/关
+  holidayToggle.onclick = () => {
+    holidayGrayEnabled = !holidayGrayEnabled;
+    if (holidayGrayEnabled) {
+      holidayTrack.classList.add('on');
+      holidayToggleText.textContent = '已开启';
+      phoneFrame.classList.remove('holiday-off');
+    } else {
+      holidayTrack.classList.remove('on');
+      holidayToggleText.textContent = '已关闭';
+      phoneFrame.classList.add('holiday-off');
+    }
+  };
+
+  // 切换浅色/深色
+  document.querySelectorAll('#modeGroup .seg-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('#modeGroup .seg-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      isDark = btn.getAttribute('data-mode') === 'dark';
+      applyStyles();
+    };
+  });
+
+  // 切换保留版课程配色
+  document.querySelectorAll('#paletteGroup .seg-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('#paletteGroup .seg-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentPalette = btn.getAttribute('data-palette');
+      applyStyles();
+    };
+  });
+
+  renderThemeDots();
+  applyStyles();
+</script>
+</body>
+</html>

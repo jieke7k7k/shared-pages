@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>UI 样品 — 小马课表「今日」视图 (228/235 定版口径)</title>
+<style>
+  :root {
+    /* 默认种子色：可可棕 cocoa 0xFF8C6246 */
+    --seed: #8C6246;
+    --seed-rgb: 140, 98, 70;
+
+    /* 浅色模式基准：浅纸白 #FAFAF8 + 4% 种子倾向 */
+    --bg-base: #FAFAF8;
+    --surface: color-mix(in srgb, #FAFAF8 96%, var(--seed) 4%);
+    --card-bg: #FFFFFF;
+    --border-color: #E5E7EB;
+    --divider-color: #EFEFEF;
+
+    /* 字阶与灰度层级 */
+    --text-primary: #18181B;
+    --text-secondary: #52525B;
+    --text-tertiary: #71717A;
+    --text-muted: #A1A1AA;
+
+    /* 语义与焦点 */
+    --primary: var(--seed);
+    --primary-soft: rgba(var(--seed-rgb), 0.11);
+    --primary-border: rgba(var(--seed-rgb), 0.28);
+    --badge-bg: #F4F4F5;
+  }
+
+  [data-theme="dark"] {
+    /* 深色模式基准：暗夜黑 #121214 + 4% 种子倾向 */
+    --bg-base: #121214;
+    --surface: color-mix(in srgb, #121214 96%, var(--seed) 4%);
+    --card-bg: #18191C;
+    --border-color: rgba(255, 255, 255, 0.09);
+    --divider-color: rgba(255, 255, 255, 0.06);
+
+    --text-primary: #F4F4F5;
+    --text-secondary: #A1A1AA;
+    --text-tertiary: #71717A;
+    --text-muted: #52525B;
+
+    /* 深色下提亮主色可读性 */
+    --primary: color-mix(in srgb, var(--seed) 65%, #FFFFFF 35%);
+    --primary-soft: rgba(var(--seed-rgb), 0.22);
+    --primary-border: rgba(var(--seed-rgb), 0.42);
+    --badge-bg: #232429;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Microsoft YaHei", sans-serif;
+    background-color: #ECECEE;
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 16px 12px 40px;
+    transition: background-color 0.2s ease;
+  }
+
+  [data-theme="dark"] body {
+    background-color: #09090B;
+  }
+
+  /* ================= 顶部样品控制台 ================= */
+  .workbench-bar {
+    width: 100%;
+    max-width: 420px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  }
+
+  .wb-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .wb-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .wb-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .seg-group {
+    display: inline-flex;
+    background: var(--badge-bg);
+    padding: 2px;
+    border-radius: 8px;
+    gap: 2px;
+  }
+
+  .seg-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .seg-btn.active {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+
+  /* 7 个界面主题色点 */
+  .theme-dots {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: nowrap;
+  }
+
+  .theme-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease;
+  }
+
+  .theme-dot.active {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 1.5px var(--card-bg), 0 0 0 3px var(--seed);
+  }
+
+  .theme-dot svg {
+    width: 12px;
+    height: 12px;
+    stroke: #FFF;
+    stroke-width: 2.5;
+    opacity: 0;
+  }
+
+  .theme-dot.active svg {
+    opacity: 1;
+  }
+
+  /* ================= 375px 手机模拟器壳 ================= */
+  .phone-frame {
+    width: 375px;
+    max-width: 100%;
+    height: 760px;
+    background-color: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 28px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  /* 状态栏 28px */
+  .status-bar {
+    height: 28px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+
+  .status-icons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* 顶部 AppBar / 日期周次头 */
+  .today-header {
+    padding: 10px 16px 12px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .week-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 1.5px 7px;
+    border-radius: 6px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .header-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+    line-height: 1.25;
+  }
+
+  .header-right {
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .header-right strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* 滚动内容区 */
+  .today-scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 0 20px;
+    scrollbar-width: none;
+  }
+  .today-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ================= 228 形态 A 分组线框 ================= */
+  .section-title {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    margin: 16px 20px 6px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    letter-spacing: 0.2px;
+  }
+
+  .section-title:first-of-type {
+    margin-top: 6px;
+  }
+
+  .section-box {
+    margin: 0 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  /* 顶部焦点状态条（当前/下一节播报，融入形态A） */
+  .focus-banner {
+    margin: 2px 16px 12px;
+    padding: 12px 14px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .focus-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .focus-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-soft);
+    flex-shrink: 0;
+  }
+
+  .focus-text-wrap {
+    min-width: 0;
+  }
+
+  .focus-tag {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--primary);
+    line-height: 1.3;
+  }
+
+  .focus-main {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 1px;
+  }
+
+  .focus-right {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    flex-shrink: 0;
+    background: var(--badge-bg);
+    padding: 4px 8px;
+    border-radius: 8px;
+  }
+
+  /* ================= 今日课程行（框内列表项） ================= */
+  .course-row {
+    display: flex;
+    align-items: stretch;
+    padding: 12px 16px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.12s ease;
+  }
+
+  .course-row:active {
+    background-color: var(--badge-bg);
+  }
+
+  /* 框内 0.5dp 分隔线，左右各缩进 16px */
+  .course-row + .course-row::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 16px;
+    right: 16px;
+    height: 0.5px;
+    background-color: var(--border-color);
+  }
+
+  /* 左侧时间与节次列 */
+  .col-time {
+    width: 52px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .t-start {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+  .t-end {
+    font-size: 11.5px;
+    font-weight: 400;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+  }
+
+  .t-node {
+    font-size: 10.5px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  /* 课程专属色竖条（取自当前课程配色方案） */
+  .course-bar {
+    width: 3.5px;
+    border-radius: 3px;
+    margin: 2px 12px 2px 4px;
+    flex-shrink: 0;
+  }
+
+  /* 中间课程信息区 */
+  .col-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .c-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .c-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+  }
+
+  .c-status-chip {
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 5px;
+    flex-shrink: 0;
+  }
+
+  .c-meta {
+    font-size: 12.5px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .c-note {
+    font-size: 11.5px;
+    color: var(--text-tertiary);
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* 右侧教室胶囊或完成态 */
+  .col-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    margin-left: 8px;
+    flex-shrink: 0;
+  }
+
+  .room-tag {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--badge-bg);
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 已结束课程置灰弱化 */
+  .course-row.is-done .t-start,
+  .course-row.is-done .c-name {
+    color: var(--text-tertiary);
+    font-weight: 500;
+  }
+  .course-row.is-done .c-meta,
+  .course-row.is-done .t-end {
+    color: var(--text-muted);
+  }
+  .course-row.is-done .course-bar {
+    opacity: 0.45;
+  }
+  .course-row.is-done .room-tag {
+    color: var(--text-tertiary);
+    font-weight: 500;
+  }
+
+  /* 午休/晚餐轻量过渡字 */
+  .break-divider {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    font-variant-numeric: tabular-nums;
+    margin-top: 6px;
+  }
+
+  /* 空状态预览 */
+  .empty-box {
+    margin: 24px 16px;
+    padding: 36px 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    text-align: center;
+    display: none;
+  }
+  .empty-box.show {
+    display: block;
+  }
+  .empty-title {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: 8px;
+  }
+  .empty-sub {
+    font-size: 12.5px;
+    color: var(--text-tertiary);
+    margin-top: 4px;
+  }
+
+  /* ================= 235 定版：48dp 底部栏（今日/课表/我的 原样保留） ================= */
+  .bottom-bar {
+    height: 48px;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: stretch;
+    position: relative;
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  .tab-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px; /* 235 定版：图标与文字间距 2dp */
+    cursor: pointer;
+    color: var(--text-tertiary);
+    position: relative;
+    transition: color 0.15s ease;
+  }
+
+  .tab-btn svg {
+    width: 20px; /* 235 定版：图标 20dp */
+    height: 20px;
+    stroke-width: 1.9;
+  }
+
+  .tab-btn span {
+    font-size: 10.5px; /* 235 定版：字 10.5sp */
+    line-height: 1.1;
+    font-weight: 400;
+  }
+
+  .tab-btn.active {
+    color: var(--primary);
+  }
+
+  .tab-btn.active span {
+    font-weight: 600;
+  }
+
+  /* 底部选中指示条 16x2.5dp */
+  .tab-btn.active::after {
+    content: "";
+    position: absolute;
+    bottom: 2.5px;
+    width: 16px;
+    height: 2.5px;
+    border-radius: 2px;
+    background: var(--primary);
+  }
+</style>
+</head>
+<body>
+
+  <!-- 顶部主题与配色切换器 -->
+  <div class="workbench-bar">
+    <div class="wb-row">
+      <span class="wb-label" id="themeNameLabel">界面主题 · 可可棕</span>
+      <div class="theme-dots" id="themeDots"></div>
+    </div>
+    <div class="wb-row">
+      <span class="wb-label">外观模式</span>
+      <div class="seg-group" id="modeGroup">
+        <button class="seg-btn active" data-mode="light">浅色</button>
+        <button class="seg-btn" data-mode="dark">深色</button>
+        <button class="seg-btn" data-mode="system">跟随系统</button>
+      </div>
+    </div>
+    <div class="wb-row">
+      <span class="wb-label">课程配色 (已剔除3套)</span>
+      <div class="seg-group" id="paletteGroup">
+        <button class="seg-btn active" data-palette="film">复古·胶片</button>
+        <button class="seg-btn" data-palette="spring">春日·游园</button>
+        <button class="seg-btn" data-palette="soda">奶油·苏打</button>
+        <button class="seg-btn" data-palette="Empty">空课态</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 375px 手机视口 -->
+  <div class="phone-frame">
+    <!-- 状态栏 -->
+    <div class="status-bar">
+      <span>09:50</span>
+      <div class="status-icons">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="10" rx="2"/><line x1="22" y1="11" x2="22" y2="13"/></svg>
+      </div>
+    </div>
+
+    <!-- 今日视图顶部：日期 + 周次 -->
+    <div class="today-header">
+      <div class="header-left">
+        <div class="header-meta">
+          <span>11月16日 周一</span>
+          <span class="week-pill">第 12 周 · 双周</span>
+        </div>
+        <h1 class="header-title">今日课程</h1>
+      </div>
+      <div class="header-right" id="summaryRight">
+        共 <strong>4</strong> 门 · 剩余 <strong>3</strong> 门
+      </div>
+    </div>
+
+    <!-- 今日视图主体滚动区 -->
+    <div class="today-scroll">
+      <div id="scheduleContent">
+        <!-- 焦点状态播报条 -->
+        <div class="focus-banner">
+          <div class="focus-left">
+            <span class="focus-dot"></span>
+            <div class="focus-text-wrap">
+              <div class="focus-tag">正在上课 · 第 3–4 节</div>
+              <div class="focus-main">药理学 · 教学楼 3-201</div>
+            </div>
+          </div>
+          <div class="focus-right">11:10 下课</div>
+        </div>
+
+        <!-- 上午分组 (228 形态 A 线框) -->
+        <div class="section-title">
+          <span>上午</span>
+          <span>08:00 – 12:00</span>
+        </div>
+        <div class="section-box">
+          <!-- 第 1-2 节 (已上完) -->
+          <div class="course-row is-done">
+            <div class="col-time">
+              <span class="t-start">08:00</span>
+              <span class="t-end">09:30</span>
+              <span class="t-node">1–2 节</span>
+            </div>
+            <div class="course-bar" data-color-idx="0"></div>
+            <div class="col-info">
+              <div class="c-name-row">
+                <span class="c-name">天然药物化学</span>
+              </div>
+              <div class="c-meta">林教授 · 1–16 周</div>
+            </div>
+            <div class="col-right">
+              <span class="room-tag">教 2-104</span>
+            </div>
+          </div>
+
+          <!-- 第 3-4 节 (正在上课) -->
+          <div class="course-row">
+            <div class="col-time">
+              <span class="t-start">09:40</span>
+              <span class="t-end">11:10</span>
+              <span class="t-node">3–4 节</span>
+            </div>
+            <div class="course-bar" data-color-idx="1"></div>
+            <div class="col-info">
+              <div class="c-name-row">
+                <span class="c-name">药理学</span>
+                <span class="c-status-chip" id="liveChip">上课中</span>
+              </div>
+              <div class="c-meta">周老师 · 1–18 周</div>
+              <div class="c-note">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span>带实验预习报告</span>
+              </div>
+            </div>
+            <div class="col-right">
+              <span class="room-tag">教 3-201</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="break-divider">午休 12:00 – 14:00</div>
+
+        <!-- 下午分组 (228 形态 A 线框) -->
+        <div class="section-title">
+          <span>下午</span>
+          <span>14:00 – 17:10</span>
+        </div>
+        <div class="section-box">
+          <!-- 第 6-8 节 -->
+          <div class="course-row">
+            <div class="col-time">
+              <span class="t-start">14:00</span>
+              <span class="t-end">16:20</span>
+              <span class="t-node">6–8 节</span>
+            </div>
+            <div class="course-bar" data-color-idx="2"></div>
+            <div class="col-info">
+              <div class="c-name-row">
+                <span class="c-name">药物分析实验</span>
+              </div>
+              <div class="c-meta">陈老师 · 2–16 周 (双周)</div>
+              <div class="c-note">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>自备白大褂与护目镜</span>
+              </div>
+            </div>
+            <div class="col-right">
+              <span class="room-tag">药学楼 B302</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="break-divider">晚餐 17:10 – 18:00</div>
+
+        <!-- 晚上分组 (228 形态 A 线框) -->
+        <div class="section-title">
+          <span>晚上</span>
+          <span>18:00 – 21:25</span>
+        </div>
+        <div class="section-box">
+          <!-- 第 10-11 节 -->
+          <div class="course-row">
+            <div class="col-time">
+              <span class="t-start">18:00</span>
+              <span class="t-end">19:30</span>
+              <span class="t-node">10–11 节</span>
+            </div>
+            <div class="course-bar" data-color-idx="3"></div>
+            <div class="col-info">
+              <div class="c-name-row">
+                <span class="c-name">歌剧鉴赏</span>
+              </div>
+              <div class="c-meta">艺术学院 · 1–12 周</div>
+            </div>
+            <div class="col-right">
+              <span class="room-tag">公教 105</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 空课表状态占位（可由顶部切换查看） -->
+      <div class="empty-box" id="emptyStateBox">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--text-muted); margin: 0 auto;"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <div class="empty-title">今天没有课程安排</div>
+        <div class="empty-sub">好好休息，或者前往「课表」查看本周其他日程</div>
+      </div>
+    </div>
+
+    <!-- 底部导航栏：保留「今日 / 课表 / 我的」三按钮原样 + 235 定版 48dp -->
+    <div class="bottom-bar">
+      <div class="tab-btn active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="3"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+          <circle cx="12" cy="15" r="1.5" fill="currentColor"></circle>
+        </svg>
+        <span>今日</span>
+      </div>
+      <div class="tab-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+          <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+          <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+          <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+        </svg>
+        <span>课表</span>
+      </div>
+      <div class="tab-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>我的</span>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // 1. 7 套界面主题种子色（默认可可棕 cocoa）
+  const THEMES = [
+    { id: 'cocoa',    name: '可可棕', hex: '#8C6246', rgb: '140, 98, 70' },
+    { id: 'forest',   name: '雾绿',   hex: '#3E7B67', rgb: '62, 123, 103' },
+    { id: 'ocean',    name: '海盐蓝', hex: '#3B6E9C', rgb: '59, 110, 156' },
+    { id: 'grape',    name: '葡萄紫', hex: '#6B5B95', rgb: '107, 91, 149' },
+    { id: 'sunset',   name: '落日橙', hex: '#D96B43', rgb: '217, 107, 67' },
+    { id: 'rose',     name: '玫瑰粉', hex: '#C85A7C', rgb: '200, 90, 124' },
+    { id: 'graphite', name: '曜石灰', hex: '#475569', rgb: '71, 85, 105' }
+  ];
+
+  // 2. 保留的课程卡片配色方案（已严格剔除 薄荷·清新 / 葡萄·紫藤 / 落日·暖阳）
+  const COURSE_PALETTES = {
+    film:   ['#9A6B56', '#5B7A72', '#B57C4E', '#6C6A8A'], // 复古·胶片馆
+    spring: ['#6BA368', '#E07A5F', '#5C80BC', '#C97B84'], // 春日·游园会
+    soda:   ['#5AA9E6', '#7FC8F8', '#F4978E', '#8E9AAF']  // 奶油·苏打水
+  };
+
+  let currentTheme = THEMES[0];
+  let currentPalette = 'film';
+  let currentMode = 'light';
+
+  const dotsContainer = document.getElementById('themeDots');
+  const themeNameLabel = document.getElementById('themeNameLabel');
+
+  function renderThemeDots() {
+    dotsContainer.innerHTML = '';
+    THEMES.forEach(t => {
+      const btn = document.createElement('button');
+      btn.className = 'theme-dot' + (t.id === currentTheme.id ? ' active' : '');
+      btn.style.backgroundColor = t.hex;
+      btn.title = t.name;
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>`;
+      btn.onclick = () => {
+        currentTheme = t;
+        applyTheme();
+        renderThemeDots();
+      };
+      dotsContainer.appendChild(btn);
+    });
+  }
+
+  function applyTheme() {
+    const root = document.documentElement;
+    root.style.setProperty('--seed', currentTheme.hex);
+    root.style.setProperty('--seed-rgb', currentTheme.rgb);
+    themeNameLabel.textContent = `界面主题 · ${currentTheme.name}`;
+
+    // 解析浅色/深色/跟随系统
+    let isDark = false;
+    if (currentMode === 'dark') isDark = true;
+    else if (currentMode === 'system') {
+      isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    if (isDark) {
+      root.setAttribute('data-theme', 'dark');
+    } else {
+      root.removeAttribute('data-theme');
+    }
+
+    // 应用课程卡片色条与上课中胶囊底色
+    const colors = COURSE_PALETTES[currentPalette] || COURSE_PALETTES.film;
+    document.querySelectorAll('.course-bar').forEach(el => {
+      const idx = parseInt(el.getAttribute('data-color-idx') || '0', 10);
+      el.style.backgroundColor = colors[idx % colors.length];
+    });
+
+    const liveChip = document.getElementById('liveChip');
+    if (liveChip) {
+      const c = colors[1];
+      liveChip.style.backgroundColor = c + (isDark ? '33' : '1F');
+      liveChip.style.color = c;
+    }
+  }
+
+  // 外观模式切换
+  document.querySelectorAll('#modeGroup .seg-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('#modeGroup .seg-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentMode = btn.getAttribute('data-mode');
+      applyTheme();
+    };
+  });
+
+  // 课程配色与空状态切换
+  document.querySelectorAll('#paletteGroup .seg-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('#paletteGroup .seg-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const val = btn.getAttribute('data-palette');
+      const scheduleContent = document.getElementById('scheduleContent');
+      const emptyBox = document.getElementById('emptyStateBox');
+      const summaryRight = document.getElementById('summaryRight');
+      if (val === 'Empty') {
+        scheduleContent.style.display = 'none';
+        emptyBox.classList.add('show');
+        summaryRight.innerHTML = '今日无课';
+      } else {
+        scheduleContent.style.display = 'block';
+        emptyBox.classList.remove('show');
+        summaryRight.innerHTML = '共 <strong>4</strong> 门 · 剩余 <strong>3</strong> 门';
+        currentPalette = val;
+        applyTheme();
+      }
+    };
+  });
+
+  // 底部三按钮切换高亮演示
+  document.querySelectorAll('.bottom-bar .tab-btn').forEach(tab => {
+    tab.onclick = () => {
+      document.querySelectorAll('.bottom-bar .tab-btn').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    };
+  });
+
+  renderThemeDots();
+  applyTheme();
+</script>
+</body>
+</html>
