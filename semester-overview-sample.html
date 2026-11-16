@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UI 样品 — 小马课表「导出整学期总览」矩阵图 (237 候选)</title>
+<style>
+  :root {
+    --seed: #8C6246;
+    --bg: #FAFAF8;
+    --card: #FFFFFF;
+    --border: #E5E7EB;
+    --text: #18181B;
+    --text2: #52525B;
+    --text3: #71717A;
+    --muted: #A1A1AA;
+    --primary: var(--seed);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Microsoft YaHei", sans-serif;
+    background: #ECECEE; color: var(--text);
+    display: flex; flex-direction: column; align-items: center;
+    padding: 20px 12px 40px;
+  }
+  .page { width: 100%; max-width: 1080px; background: var(--bg); border-radius: 16px; padding: 20px 20px 16px; }
+  .head { margin-bottom: 12px; }
+  .head h1 { font-size: 20px; font-weight: 700; }
+  .head p { font-size: 12.5px; color: var(--text3); margin-top: 5px; line-height: 1.6; }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 11.5px; color: var(--text2);
+    margin-bottom: 14px; align-items: center;
+  }
+  .legend .chip-demo {
+    display: inline-block; padding: 2px 7px; border-radius: 5px; font-size: 11px; font-weight: 600; color: #18181B;
+  }
+  .legend .tag-half {
+    display: inline-block; font-size: 9px; font-weight: 700; color: var(--primary);
+    border: 1px solid var(--primary); border-radius: 4px; padding: 0 3px; margin-left: 2px; vertical-align: 1px;
+  }
+  .legend .exam-demo {
+    display: inline-block; padding: 2px 8px; border: 1px dashed #C4C4C8; border-radius: 5px; color: var(--text3);
+  }
+  /* 矩阵：行 = 周次，列 = 星期；小屏横向滑动看全尺寸，不挤 */
+  .matrix-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px; }
+  .matrix { min-width: 1040px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--card); }
+  .m-head, .m-row { display: grid; grid-template-columns: 58px repeat(7, 1fr); }
+  .m-head { background: var(--bg); border-bottom: 1px solid var(--border); }
+  .m-head .mh {
+    font-size: 12.5px; font-weight: 600; color: var(--text2); text-align: center; padding: 9px 0;
+  }
+  .m-head .mh:first-child { color: var(--text3); font-weight: 500; }
+  .m-row { border-bottom: 1px solid #F0F0F0; min-height: 62px; }
+  .m-row:last-child { border-bottom: 0; }
+  .m-row .week-no {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; color: var(--text2); background: var(--bg);
+    border-right: 1px solid #F0F0F0;
+  }
+  .m-row .day-cell { padding: 5px 5px; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
+  .m-row .day-cell + .day-cell { border-left: 1px solid #F5F5F5; }
+  .chip {
+    font-size: 11.5px; font-weight: 600; color: #18181B; line-height: 1.35;
+    border-radius: 5px; padding: 3px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .chip .wk { font-size: 9px; font-weight: 700; color: var(--primary); border: 1px solid var(--primary); border-radius: 3px; padding: 0 2px; margin-left: 3px; }
+  .m-row.exam { min-height: 44px; }
+  .m-row.exam .day-cell {
+    align-items: center; justify-content: center;
+    border: 1px dashed #C9C9CE; border-radius: 6px; margin: 5px;
+    font-size: 11px; color: var(--text3);
+  }
+  .m-row.exam .week-no { color: var(--text3); }
+  .foot { font-size: 12px; color: var(--text3); line-height: 1.75; margin-top: 14px; }
+  .foot b { color: var(--text2); }
+  .foot .warn {
+    margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: #F4F4F5;
+    font-size: 12px; color: var(--text2); line-height: 1.7;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="head">
+    <h1>2026–2027-1 学期总览</h1>
+    <p>16 个教学周 + 2 个考试周 · 行 = 周次，列 = 星期 · 导出为单张 PNG（约 1080 × 1500）</p>
+  </div>
+  <div class="legend">
+    <span><span class="chip-demo" style="background:#D9C2C7">高数</span> 课程（莫兰迪配色）</span>
+    <span>半学期课只在自己的周出现<span class="tag-half">1–8周</span></span>
+    <span><span class="exam-demo">考试周 · 无课</span> 考试周留虚线框</span>
+    <span>双周课只在双周出现（第 2、4、6…周）</span>
+  </div>
+  <div class="matrix-scroll"><div class="matrix" id="matrix"></div></div>
+  <div class="foot">
+    <b>排版说明：</b>周次作行、星期作列；每天的课排成小色块（只写简称），半学期课带周次小标签；无课周（考试周）留虚线框 + 轻量文字，不画假课。<br/>
+    <b>导出：</b>整学期一张图，底部按钮文案变为「分享整学期课表 (PNG)」；默认仍是「导出本周课表」，顶部 36dp 分段选择器切换。
+    <div class="warn"><b>取舍要你定：</b>这张图是按 1080 宽画的，课程名能看清；如果缩到 375 手机宽，字就挤没了，只能左右滑动或双指缩放着看。总览图天生就是宽图，手机上只能这样看，你接受吗？接受的话就按这个布局写 237 规格。</div>
+  </div>
+</div>
+
+<script>
+  // 莫兰迪课程色（与课表一致）
+  const C = { '高数': '#D9C2C7', '大物': '#C7BFC4', '无机': '#B8BFC7', '有机': '#AFC3BB', '药分': '#C4CBB5', '药分实验': '#D3CDB4', '体育': '#E3D9C2', '英语': '#C9CFC9', '药导': '#D8CFC8', '计算机': '#BFC9D8' };
+  // 每周课表：周一~周日，每天若干 {n: 简称, wk: 周次标签(半学期/双周才有)}
+  const WEEK = [
+    [ [{n:'高数'},{n:'大物'},{n:'英语'}], [{n:'无机'},{n:'药分'},{n:'体育'}], [{n:'有机'},{n:'高数'},{n:'大物'}], [{n:'体育'},{n:'药分实验', wk:'双周'},{n:'英语'}], [{n:'无机'},{n:'药导', wk:'1–8周'},{n:'计算机', wk:'9–16周'}], [], [] ],
+  ];
+  const DAYS = ['周一','周二','周三','周四','周五','周六','周日'];
+  const m = document.getElementById('matrix');
+  let html = '<div class="m-head"><div class="mh">周次</div>' + DAYS.map(d => '<div class="mh">' + d + '</div>').join('') + '</div>';
+  for (let w = 1; w <= 18; w++) {
+    if (w >= 17) {
+      html += '<div class="m-row exam"><div class="week-no">第 ' + w + ' 周</div>'
+        + DAYS.map(() => '<div class="day-cell">考试周 · 无课</div>').join('') + '</div>';
+      continue;
+    }
+    html += '<div class="m-row"><div class="week-no">第 ' + w + ' 周</div>';
+    WEEK[0].forEach(day => {
+      const chips = day.filter(c => {
+        if (c.wk === '双周') return w % 2 === 0;
+        if (c.wk === '1–8周') return w <= 8;
+        if (c.wk === '9–16周') return w >= 9;
+        return true;
+      }).map(c => '<span class="chip" style="background:' + C[c.n] + '">' + c.n + (c.wk ? '<span class="wk">' + c.wk + '</span>' : '') + '</span>').join('');
+      html += '<div class="day-cell">' + chips + '</div>';
+    });
+    html += '</div>';
+  }
+  m.innerHTML = html;
+</script>
+</body>
+</html>
