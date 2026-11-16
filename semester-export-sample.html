@@ -95,6 +95,14 @@
   .conflict .half .tag { display: inline-block; font-size: 8px; font-weight: 600; color: #4B5563; background: rgba(255,255,255,0.7); border-radius: 3px; padding: 0 3px; line-height: 1.5; white-space: nowrap; }
   .conflict .half .meta { font-size: 8.5px; font-weight: 500; color: #374151; }
   .conflict .half.top { border-bottom: 1.5px dashed #6B7280; }
+  /* 三种对比风格（第 12 周对比区） */
+  .conflict.strong { background: linear-gradient(180deg, #FBBF24 0%, #F97316 100%); }
+  .conflict.ticket { background: #FDE68A; position: relative; }
+  .conflict.ticket::before, .conflict.ticket::after { content: ""; position: absolute; top: 50%; width: 10px; height: 10px; margin-top: -5px; border-radius: 50%; background: #FBF9F5; }
+  .conflict.ticket::before { left: -5px; }
+  .conflict.ticket::after { right: -5px; }
+  .conflict.accent { background: #FDE68A; border: 3px solid #B45309; }
+  .conflict.accent .half.top { border-bottom: 1.5px dashed #B45309; }
   .cap { font-size: 12px; color: var(--text3); margin: 6px 2px 0; line-height: 1.5; }
   .cap b { color: var(--text2); }
 
@@ -130,6 +138,8 @@
     .conflict .half { padding: 2px 2px; font-size: 8.5px; }
     .conflict .half .meta { font-size: 8px; }
     .conflict .half .tag { font-size: 7px; padding: 0 2px; }
+    .conflict.accent .half { font-size: 8px; }
+    .conflict.accent .half .meta { font-size: 7.5px; }
     .course .meta { font-size: 8.5px; }
     .sheet-title h3 { font-size: 17px; }
   }
@@ -143,6 +153,7 @@
     .bs { background: #27272A; box-shadow: 0 -4px 24px rgba(0,0,0,0.5); }
     .bs .cancel { background: #3F3F46; }
     .course, .conflict .half { color: #1F2937; }
+    .conflict.ticket::before, .conflict.ticket::after { background: #1E1C19; }
   }
   @media print {
     body { background: #fff; }
@@ -369,7 +380,111 @@
   </div>
   <p class="cap"><b>周一 1–2 节（半块 &lt; 50px）：</b>一个完整框、特殊渐变色、虚线分半，上半「前半学期」药物化学、下半「后半学期」药理学，老师名藏掉，只留「课名 · 教室」。<b>周二 6–9 节（半块够高）：</b>同样一框渐变分半，教室信息全留。上半永远是前半学期、下半是后半学期。渐变色所有冲突块统一用，不用各门课自己的颜色。</p>
 
-  <h2>③ 导出页入口<span class="tag">BottomSheet 双轨</span></h2>
+  <h2>③ 三种风格对比<span class="tag">你挑一个</span></h2>
+  <p class="note">现在的第 12 页是淡渐变（你说不够明显）。下面三个是另外的方案：<b>A 强渐变</b>（周一 1–2 节，渐变加深加艳，一眼就是特殊的）、<b>B 票根撕线</b>（周二 6–9 节，两边带撕口、中间是撕线，像一张票根）、<b>C 粗框</b>（周三 1–2 节，平色底 + 3px 粗边框，框本身就很显眼）。</p>
+<div class="sheet">
+    <div class="sheet-title"><h3>三种风格对比 · 第 12 周</h3><p>11月23日 – 11月29日 · 同一周里放三种冲突块，方便一眼对比</p></div>
+    <div class="grid">
+      <div class="dow" style="grid-row:1;grid-column:1"><span class="m">11月</span></div>
+      <div class="dow" style="grid-row:1;grid-column:2"><span>一</span><span class="d">23</span></div>
+      <div class="dow" style="grid-row:1;grid-column:3"><span>二</span><span class="d">24</span></div>
+      <div class="dow" style="grid-row:1;grid-column:4"><span>三</span><span class="d">25</span></div>
+      <div class="dow" style="grid-row:1;grid-column:5"><span>四</span><span class="d">26</span></div>
+      <div class="dow" style="grid-row:1;grid-column:6"><span>五</span><span class="d">27</span></div>
+      <div class="dow" style="grid-row:1;grid-column:7"><span>六</span><span class="d">28</span></div>
+      <div class="dow" style="grid-row:1;grid-column:8"><span>日</span><span class="d">29</span></div>
+      <div class="axis" style="grid-row:2;grid-column:1"><b>1</b><span>08:00</span><span>08:40</span></div>
+      <div class="cell" style="grid-row:2;grid-column:3"></div>
+      
+      <div class="cell" style="grid-row:2;grid-column:6"></div>
+      <div class="cell" style="grid-row:2;grid-column:7"></div>
+      <div class="cell" style="grid-row:2;grid-column:8"></div>
+      <div class="axis" style="grid-row:3;grid-column:1"><b>2</b><span>08:50</span><span>09:30</span></div>
+      <div class="cell" style="grid-row:3;grid-column:3"></div>
+      
+      <div class="cell" style="grid-row:3;grid-column:6"></div>
+      <div class="cell" style="grid-row:3;grid-column:7"></div>
+      <div class="cell" style="grid-row:3;grid-column:8"></div>
+      <div class="axis" style="grid-row:4;grid-column:1"><b>3</b><span>09:40</span><span>10:20</span></div>
+      <div class="cell" style="grid-row:4;grid-column:2"></div>
+      <div class="cell" style="grid-row:4;grid-column:3"></div>
+      <div class="cell" style="grid-row:4;grid-column:5"></div>
+      <div class="cell" style="grid-row:4;grid-column:6"></div>
+      <div class="cell" style="grid-row:4;grid-column:7"></div>
+      <div class="cell" style="grid-row:4;grid-column:8"></div>
+      <div class="axis" style="grid-row:5;grid-column:1"><b>4</b><span>10:30</span><span>11:10</span></div>
+      <div class="cell" style="grid-row:5;grid-column:2"></div>
+      <div class="cell" style="grid-row:5;grid-column:3"></div>
+      <div class="cell" style="grid-row:5;grid-column:5"></div>
+      <div class="cell" style="grid-row:5;grid-column:6"></div>
+      <div class="cell" style="grid-row:5;grid-column:7"></div>
+      <div class="cell" style="grid-row:5;grid-column:8"></div>
+      <div class="axis" style="grid-row:6;grid-column:1"><b>5</b><span>11:20</span><span>12:00</span></div>
+      <div class="cell" style="grid-row:6;grid-column:2"></div>
+      <div class="cell" style="grid-row:6;grid-column:3"></div>
+      <div class="cell" style="grid-row:6;grid-column:5"></div>
+      <div class="cell" style="grid-row:6;grid-column:6"></div>
+      <div class="cell" style="grid-row:6;grid-column:7"></div>
+      <div class="cell" style="grid-row:6;grid-column:8"></div>
+      <div class="axis" style="grid-row:8;grid-column:1"><b>6</b><span>14:00</span><span>14:40</span></div>
+      <div class="cell" style="grid-row:8;grid-column:6"></div>
+      <div class="cell" style="grid-row:8;grid-column:7"></div>
+      <div class="axis" style="grid-row:9;grid-column:1"><b>7</b><span>14:50</span><span>15:30</span></div>
+      <div class="cell" style="grid-row:9;grid-column:6"></div>
+      <div class="cell" style="grid-row:9;grid-column:7"></div>
+      <div class="axis" style="grid-row:10;grid-column:1"><b>8</b><span>15:40</span><span>16:20</span></div>
+      <div class="cell" style="grid-row:10;grid-column:2"></div>
+      <div class="cell" style="grid-row:10;grid-column:6"></div>
+      <div class="cell" style="grid-row:10;grid-column:7"></div>
+      <div class="axis" style="grid-row:11;grid-column:1"><b>9</b><span>16:30</span><span>17:10</span></div>
+      <div class="cell" style="grid-row:11;grid-column:2"></div>
+      <div class="cell" style="grid-row:11;grid-column:6"></div>
+      <div class="cell" style="grid-row:11;grid-column:7"></div>
+      <div class="axis" style="grid-row:13;grid-column:1"><b>10</b><span>18:00</span><span>18:40</span></div>
+      <div class="cell" style="grid-row:13;grid-column:3"></div>
+      <div class="cell" style="grid-row:13;grid-column:4"></div>
+      <div class="cell" style="grid-row:13;grid-column:7"></div>
+      <div class="axis" style="grid-row:14;grid-column:1"><b>11</b><span>18:45</span><span>19:25</span></div>
+      <div class="cell" style="grid-row:14;grid-column:3"></div>
+      <div class="cell" style="grid-row:14;grid-column:4"></div>
+      <div class="cell" style="grid-row:14;grid-column:7"></div>
+      <div class="axis" style="grid-row:15;grid-column:1"><b>12</b><span>19:40</span><span>20:20</span></div>
+      <div class="cell" style="grid-row:15;grid-column:2"></div>
+      <div class="cell" style="grid-row:15;grid-column:3"></div>
+      <div class="cell" style="grid-row:15;grid-column:4"></div>
+      <div class="cell" style="grid-row:15;grid-column:7"></div>
+      <div class="axis" style="grid-row:16;grid-column:1"><b>13</b><span>20:30</span><span>21:10</span></div>
+      <div class="cell" style="grid-row:16;grid-column:2"></div>
+      <div class="cell" style="grid-row:16;grid-column:3"></div>
+      <div class="cell" style="grid-row:16;grid-column:4"></div>
+      <div class="cell" style="grid-row:16;grid-column:7"></div>
+      <div class="axis" style="grid-row:17;grid-column:1"><b>14</b><span>21:20</span><span>22:00</span></div>
+      <div class="cell" style="grid-row:17;grid-column:2"></div>
+      <div class="cell" style="grid-row:17;grid-column:3"></div>
+      <div class="cell" style="grid-row:17;grid-column:4"></div>
+      <div class="cell" style="grid-row:17;grid-column:5"></div>
+      <div class="cell" style="grid-row:17;grid-column:7"></div>
+      <div class="band" style="grid-row:7;grid-column:1 / -1"><span>午间</span><span class="t">午 间&nbsp;&nbsp;12:00 – 14:00</span></div>
+      <div class="band" style="grid-row:12;grid-column:1 / -1"><span>晚间</span><span class="t">晚 间&nbsp;&nbsp;17:10 – 18:00</span></div>
+      <div class="course c-blue" style="grid-row:2 / 4;grid-column:5">药物化学<div class="meta">16-102<br>邓卫平</div></div>
+      <div class="course c-teal" style="grid-row:4 / 7;grid-column:4">药理学<div class="meta">16-639<br>周金明</div></div>
+      <div class="course c-green" style="grid-row:8 / 10;grid-column:2">药物分析<div class="meta">16-222<br>袁培新（晚上同教室）</div></div>
+      <div class="course c-purple" style="grid-row:8 / 12;grid-column:4">实验室</div>
+      <div class="course c-yellow" style="grid-row:8 / 12;grid-column:5">药理学实验<div class="meta">12-人体解剖生理学实验室（2f）<br>李灵欢</div></div>
+      <div class="course c-purple" style="grid-row:8 / 12;grid-column:8">实验室</div>
+      <div class="course c-salmon" style="grid-row:13 / 15;grid-column:2">药物波谱分析<div class="meta">16-222<br>占田广</div></div>
+      <div class="course c-lgreen" style="grid-row:13 / 15;grid-column:5">计算机辅助药物设计<div class="meta">16-222<br>周金明</div></div>
+      <div class="course c-purple" style="grid-row:13 / 18;grid-column:6">实验室</div>
+      <div class="course c-purple" style="grid-row:13 / 18;grid-column:8">实验室</div>
+      <div class="course c-pink" style="grid-row:15 / 17;grid-column:5">大学体育<div class="meta">体育馆</div></div>
+      <div class="conflict strong" style="grid-row:2 / 4;grid-column:2"><div class="half top"><span class="tag">前半学期</span><br>药物化学<div class="meta">16-102</div></div><div class="half bot"><span class="tag">后半学期</span><br>药理学<div class="meta">16-639</div></div></div>
+      <div class="conflict ticket" style="grid-row:8 / 12;grid-column:3"><div class="half top"><span class="tag">前半学期</span><br>药物分析实验<div class="meta">12-分析化学实验室（二）(4f)</div></div><div class="half bot"><span class="tag">后半学期</span><br>实验室</div></div>
+      <div class="conflict accent" style="grid-row:2 / 4;grid-column:4"><div class="half top"><span class="tag">前半学期</span><br>药物化学<div class="meta">16-102</div></div><div class="half bot"><span class="tag">后半学期</span><br>药理学<div class="meta">16-639</div></div></div>
+    </div>
+  </div>
+  <p class="cap">A 最艳，B 最像票，C 最稳。你看哪个顺眼，或者要我再换。</p>
+
+  <h2>④ 导出页入口<span class="tag">BottomSheet 双轨</span></h2>
   <p class="note">现状只有一句「导出本周课表」。Argon 建议：主页右上角点「导出」后弹一个约 260dp 的 BottomSheet，上下两行，PDF 走整学期、PNG 走当前周。</p>
   <div class="sheet-demo">
     <div class="bs">
