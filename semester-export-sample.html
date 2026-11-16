@@ -89,8 +89,8 @@
   .c-salmon { background: #E8A8A0; border-color: #D4897F; }
   .c-lgreen { background: #A8D0B0; border-color: #7FB392; }
   .c-pink   { background: #E8A8C0; border-color: #D489A8; }
-  /* 冲突块：一个完整外框（像一节课），整框一个亮橙渐变色（区别其他课程的纯色块），中间虚线分开，上下半各标前半/后半学期 */
-  .conflict { display: flex; flex-direction: column; padding: 0; margin: 1px; overflow: hidden; background: linear-gradient(180deg, #FBBF24 0%, #F97316 100%); border: 1.5px solid #6B7280; border-radius: 8px; }
+  /* 冲突块：一个完整外框（像一节课），整框一个焦糖渐变色（区别其他课程的纯色块），中间虚线分开，上下半各标前半/后半学期 */
+  .conflict { display: flex; flex-direction: column; padding: 0; margin: 1px; overflow: hidden; background: linear-gradient(180deg, #EBC9A0 0%, #BE8A5A 100%); border: 1.5px solid #6B7280; border-radius: 8px; }
   .conflict .half { flex: 1; padding: 2px 4px; overflow: hidden; background: transparent; font-size: 9.5px; line-height: 1.25; font-weight: 700; color: #1F2937; }
   .conflict .half .tag { display: inline-block; font-size: 8px; font-weight: 600; color: #4B5563; background: rgba(255,255,255,0.7); border-radius: 3px; padding: 0 3px; line-height: 1.5; white-space: nowrap; }
   .conflict .half .meta { font-size: 8.5px; font-weight: 500; color: #374151; }
@@ -153,12 +153,35 @@
     .bs .cancel { background: #3F3F46; }
     .course, .conflict .half { color: #1F2937; }
     .conflict.ticket::before, .conflict.ticket::after { background: #1E1C19; }
+    .ed-card { background: #26221E; border-color: #3A352E; }
+    .ed-row .lab, .sw .nm, .demo .nm { color: #E5E0D8; }
+    .ed-row .lab small, .sw .hex { color: #9C968B; }
   }
   @media print {
     body { background: #fff; }
     .page { max-width: 100%; padding: 0; }
     .sheet, .sheet-demo { break-inside: avoid; }
   }
+
+  /* 冲突块外观编辑（第 ⑤ 节） */
+  .ed-card { background: #fff; border: 1px solid #E9E4DA; border-radius: 14px; padding: 14px; margin: 10px 0; }
+  .ed-row { margin: 14px 0; }
+  .ed-row .lab { font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 8px; }
+  .ed-row .lab small { font-weight: 400; color: #6B7280; }
+  .swatches { display: flex; gap: 12px; }
+  .sw { flex: 1; text-align: center; }
+  .sw .chip { height: 56px; border-radius: 10px; border: 2px solid transparent; position: relative; }
+  .sw.sel .chip { border-color: #1F2937; }
+  .sw.sel .chip::after { content: "\2713"; position: absolute; right: 4px; top: 2px; color: #1F2937; font-weight: 800; font-size: 13px; }
+  .sw .nm { font-size: 12px; font-weight: 700; color: #374151; margin-top: 5px; }
+  .sw .hex { font-size: 10px; color: #9CA3AF; white-space: nowrap; }
+  .demos { display: flex; gap: 12px; }
+  .demo { flex: 1; text-align: center; }
+  .demo .box { height: 150px; border-radius: 10px; overflow: hidden; position: relative; }
+  .demo .box .conflict { height: 100%; margin: 0; border-radius: 10px; }
+  .demo .nm { font-size: 12px; font-weight: 700; color: #374151; margin-top: 5px; }
+  .stripe-bg { background: repeating-linear-gradient(45deg, #93C5FD 0 10px, #FDE68A 10px 20px, #86EFAC 20px 30px, #F9A8D4 30px 40px); }
+  .frost { background: rgba(235, 201, 160, 0.55) !important; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
 </style>
 </head>
 <body>
@@ -499,8 +522,38 @@
     <b>已定（2026-11-17）：</b>周数不用定死，导出时软件按课表里最晚那周自动算页数（最晚的课到第几周，PDF 就是几页）。
   </div>
 
+
+  <h2>⑤ 冲突块外观编辑<span class="tag">新功能</span></h2>
+  <p class="note">你说得对，亮橙是丑了点，换成焦糖当默认。而且颜色不该写死，做成 App 里能调的：<b>颜色</b>随便换、<b>渐变强度</b>能拉、<b>模糊</b>能开。下面是编辑页的样子（示意）：</p>
+  <div class="ed-card">
+    <div class="ed-row">
+      <div class="lab">颜色 <small>点一个就换，导出也跟着换</small></div>
+      <div class="swatches">
+        <div class="sw sel"><div class="chip" style="background:linear-gradient(180deg,#EBC9A0,#BE8A5A)"></div><div class="nm">焦糖（默认）</div><div class="hex">#EBC9A0 → #BE8A5A</div></div>
+        <div class="sw"><div class="chip" style="background:linear-gradient(180deg,#B9C9D9,#7E9BB5)"></div><div class="nm">雾蓝</div><div class="hex">#B9C9D9 → #7E9BB5</div></div>
+        <div class="sw"><div class="chip" style="background:linear-gradient(180deg,#C2CDB4,#8A9A7A)"></div><div class="nm">豆沙绿</div><div class="hex">#C2CDB4 → #8A9A7A</div></div>
+      </div>
+    </div>
+    <div class="ed-row">
+      <div class="lab">渐变强度 <small>0% = 纯色一块，100% = 渐变拉满</small></div>
+      <div class="demos">
+        <div class="demo"><div class="box"><div class="conflict" style="background:linear-gradient(180deg,#EBC9A0,#DDB68B)"><div class="half top"><span class="tag">前半学期</span><br>药物化学<div class="meta">16-102</div></div><div class="half bot"><span class="tag">后半学期</span><br>药理学<div class="meta">16-639</div></div></div></div><div class="nm">30%（很淡）</div></div>
+        <div class="demo"><div class="box"><div class="conflict" style="background:linear-gradient(180deg,#EBC9A0,#D0A376)"><div class="half top"><span class="tag">前半学期</span><br>药物化学<div class="meta">16-102</div></div><div class="half bot"><span class="tag">后半学期</span><br>药理学<div class="meta">16-639</div></div></div></div><div class="nm">60%（适中）</div></div>
+        <div class="demo"><div class="box"><div class="conflict" style="background:linear-gradient(180deg,#EBC9A0,#BE8A5A)"><div class="half top"><span class="tag">前半学期</span><br>药物化学<div class="meta">16-102</div></div><div class="half bot"><span class="tag">后半学期</span><br>药理学<div class="meta">16-639</div></div></div></div><div class="nm">100%（拉满）</div></div>
+      </div>
+    </div>
+    <div class="ed-row">
+      <div class="lab">模糊 <small>开起来像毛玻璃，底下的格子是虚的；关了就是实色块</small></div>
+      <div class="demos">
+        <div class="demo"><div class="box stripe-bg"><div class="conflict" style="background:linear-gradient(180deg,#EBC9A0,#BE8A5A)"><div class="half top"><span class="tag">前半学期</span><br>药物化学<div class="meta">16-102</div></div><div class="half bot"><span class="tag">后半学期</span><br>药理学<div class="meta">16-639</div></div></div></div><div class="nm">关（实色）</div></div>
+        <div class="demo"><div class="box stripe-bg"><div class="conflict frost"><div class="half top"><span class="tag">前半学期</span><br>药物化学<div class="meta">16-102</div></div><div class="half bot"><span class="tag">后半学期</span><br>药理学<div class="meta">16-639</div></div></div></div><div class="nm">开（毛玻璃）</div></div>
+      </div>
+    </div>
+  </div>
+  <p class="cap">默认焦糖、强度 100%、模糊关。三个颜色你挑一个当默认；强度和模糊的默认值你也可以定（比如强度 60%、模糊开）。</p>
+
   <div class="foot">
-    <b>样品说明：</b>HTML 样品只演示 Argon 结论的形态与样式（多页 PDF 每页一周 + 冲突分半 + 双轨入口），不代表已开工。Argon 回复原文与两段代码块已随任务存档；下一环节等你点头：确认形态 → 再写规格 → 再开工。
+    <b>样品说明：</b>形态已定（多页 PDF 每页一周 + 冲突分半 + 双轨入口）。新加：冲突块外观可编辑（颜色、渐变强度、模糊），默认焦糖、强度 100%、模糊关。下一环节：写 237 规格 → 开工。
   </div>
 </div>
 </body>
