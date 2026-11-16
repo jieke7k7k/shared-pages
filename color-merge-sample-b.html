@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>UI 样品 — 小马课表「主题与课程配色合并」方案 B (228/235 定版口径)</title>
+<style>
+  :root {
+    --seed: #8C6246;
+    --seed-rgb: 140, 98, 70;
+    --bg-base: #FAFAF8;
+    --surface: color-mix(in srgb, #FAFAF8 96%, var(--seed) 4%);
+    --card-bg: #FFFFFF;
+    --border-color: #E5E7EB;
+    --divider-color: #EFEFEF;
+    --text-primary: #18181B;
+    --text-secondary: #52525B;
+    --text-tertiary: #71717A;
+    --text-muted: #A1A1AA;
+    --primary: var(--seed);
+    --primary-soft: rgba(var(--seed-rgb), 0.11);
+    --primary-border: rgba(var(--seed-rgb), 0.28);
+    --badge-bg: #F4F4F5;
+  }
+  [data-theme="dark"] {
+    --bg-base: #121214;
+    --surface: color-mix(in srgb, #121214 96%, var(--seed) 4%);
+    --card-bg: #18191C;
+    --border-color: rgba(255, 255, 255, 0.09);
+    --divider-color: rgba(255, 255, 255, 0.06);
+    --text-primary: #F4F4F5;
+    --text-secondary: #A1A1AA;
+    --text-tertiary: #71717A;
+    --text-muted: #52525B;
+    --primary: color-mix(in srgb, var(--seed) 65%, #FFFFFF 35%);
+    --primary-soft: rgba(var(--seed-rgb), 0.22);
+    --primary-border: rgba(var(--seed-rgb), 0.42);
+    --badge-bg: #232429;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Microsoft YaHei", sans-serif;
+    background-color: #ECECEE; color: var(--text-primary);
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh; padding: 16px 12px 40px; transition: background-color 0.2s ease;
+  }
+  [data-theme="dark"] body { background-color: #09090B; }
+  .phone { width: 100%; max-width: 375px; position: relative; }
+  .workbench-bar {
+    width: 100%; background: var(--card-bg); border: 1px solid var(--border-color);
+    border-radius: 14px; padding: 10px 12px; margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  }
+  .workbench-bar .wb-title { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+  .workbench-bar .wb-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+  .seg { display: flex; background: var(--badge-bg); border-radius: 999px; padding: 2px; gap: 2px; flex-shrink: 0; }
+  .seg button {
+    border: 0; background: transparent; color: var(--text-secondary);
+    font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 999px; cursor: pointer;
+  }
+  .seg button.on { background: var(--card-bg); color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+
+  /* 页顶实时预览（迷你课表） */
+  .preview-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin: 2px 2px 8px; }
+  .preview-box {
+    background: var(--surface); border: 1px solid var(--border-color);
+    border-radius: 14px; padding: 12px; margin-bottom: 16px;
+  }
+  .preview-grid { display: grid; grid-template-columns: 30px repeat(3, 1fr); gap: 6px; }
+  .preview-grid .ph { font-size: 10.5px; color: var(--text-tertiary); text-align: center; padding: 2px 0; }
+  .preview-grid .pn { font-size: 10px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; }
+  .preview-cell {
+    border-radius: 8px; padding: 7px 6px; font-size: 11px; font-weight: 600;
+    color: #18181B; line-height: 1.3; min-height: 44px;
+    display: flex; flex-direction: column; justify-content: center; gap: 1px;
+  }
+  .preview-cell small { font-size: 9.5px; font-weight: 500; opacity: 0.72; }
+  .preview-cell.blank { background: transparent; border: 1px dashed var(--border-color); }
+  .preview-note { font-size: 11px; color: var(--text-tertiary); margin-top: 10px; line-height: 1.5; }
+  .preview-note b { color: var(--text-secondary); font-weight: 600; }
+
+  /* 228 形态 A 线框：标题在框外左上方 */
+  .section-title {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 0 4px; margin-bottom: 6px;
+  }
+  .section-title .st-name { font-size: 13.5px; font-weight: 600; }
+  .section-title .st-value { font-size: 12px; color: var(--text-tertiary); }
+  .section-box {
+    background: var(--card-bg); border: 1px solid var(--border-color);
+    border-radius: 14px; margin-bottom: 16px; overflow: hidden;
+  }
+  .entry-row {
+    display: flex; align-items: center; gap: 10px; padding: 14px 14px; cursor: pointer;
+    border: 0; background: transparent; width: 100%; text-align: left;
+  }
+  .entry-row:active { background: var(--badge-bg); }
+  .entry-row .er-label { font-size: 13.5px; font-weight: 500; color: var(--text-primary); }
+  .entry-row .er-value { margin-left: auto; font-size: 12.5px; color: var(--text-tertiary); }
+  .entry-row .er-chev { font-size: 16px; color: var(--text-muted); }
+  .section-hint { font-size: 11px; color: var(--text-tertiary); line-height: 1.55; padding: 0 4px; margin-top: -8px; margin-bottom: 16px; }
+
+  /* BottomSheet：双区抽屉，不超屏幕 55%，遮罩近透明 */
+  .scrim {
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.12);
+    opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 40;
+  }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  .sheet {
+    position: fixed; left: 50%; transform: translate(-50%, 100%);
+    bottom: 0; width: 100%; max-width: 420px; max-height: 55vh;
+    background: var(--card-bg); border-radius: 20px 20px 0 0;
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.16); z-index: 41;
+    transition: transform 0.25s ease; display: flex; flex-direction: column;
+  }
+  .sheet.open { transform: translate(-50%, 0); }
+  .sheet-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border-color); margin: 10px auto 4px; flex-shrink: 0; }
+  .sheet-title { font-size: 15px; font-weight: 700; text-align: center; padding: 4px 0 10px; flex-shrink: 0; }
+  .sheet-body { overflow-y: auto; padding: 0 16px 20px; }
+  .sheet-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin: 12px 0 10px; }
+  .sheet-label:first-child { margin-top: 2px; }
+  .theme-dots { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .theme-dot {
+    width: 30px; height: 30px; border-radius: 50%; cursor: pointer; position: relative;
+    border: 2px solid transparent; outline: 2px solid transparent; outline-offset: 2px;
+    transition: outline-color 0.15s ease;
+  }
+  .theme-dot.on { outline-color: var(--primary); }
+  .theme-dot .td-check {
+    position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+    color: #fff; font-size: 13px; font-weight: 700;
+  }
+  .theme-dot.on .td-check { display: flex; }
+  .lock-row {
+    display: flex; align-items: center; gap: 10px; padding: 12px 0;
+    border-top: 0.5px solid var(--divider-color); border-bottom: 0.5px solid var(--divider-color);
+    margin-top: 14px; cursor: pointer;
+  }
+  .lock-row .lr-text { font-size: 13px; font-weight: 500; }
+  .lock-row .lr-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+  .lock-switch {
+    margin-left: auto; width: 46px; height: 28px; border-radius: 999px; flex-shrink: 0;
+    background: var(--primary); position: relative; transition: background 0.15s ease;
+  }
+  .lock-switch::after {
+    content: ''; position: absolute; top: 3px; left: 24px; width: 22px; height: 22px;
+    border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: left 0.15s ease;
+  }
+  .lock-switch.off { background: #D4D4D8; }
+  .lock-switch.off::after { left: 3px; }
+  .palette-row {
+    display: flex; align-items: center; gap: 10px; padding: 11px 4px; cursor: pointer;
+    border-bottom: 0.5px solid var(--divider-color);
+  }
+  .palette-row:last-child { border-bottom: 0; }
+  .palette-row .pr-name { font-size: 13.5px; font-weight: 500; width: 108px; flex-shrink: 0; }
+  .palette-row .pr-colors { display: flex; gap: 4px; flex: 1; }
+  .palette-row .pr-colors i { flex: 1; height: 20px; border-radius: 5px; display: block; }
+  .palette-row .pr-theme { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+  .palette-row .pr-check {
+    width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+    background: var(--primary); color: #fff; font-size: 11px; line-height: 18px; text-align: center;
+    display: none;
+  }
+  .palette-row.on .pr-check { display: block; }
+  .palette-row.on .pr-name { font-weight: 700; }
+  .foot { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 4px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="phone" id="app">
+  <div class="workbench-bar">
+    <div>
+      <div class="wb-title">方案 B · 单行入口 + 双区抽屉</div>
+      <div class="wb-sub">点下面那行打开抽屉，抽屉不超半屏、不挡顶部预览</div>
+    </div>
+    <div class="seg" id="modeSeg">
+      <button class="on" data-mode="light">浅色</button>
+      <button data-mode="dark">深色</button>
+    </div>
+  </div>
+
+  <div class="preview-title">实时预览</div>
+  <div class="preview-box">
+    <div class="preview-grid" id="previewGrid"></div>
+    <div class="preview-note">当前：<b id="nowPalette">莫兰迪·高级灰</b> × <b id="nowTheme">雾绿</b><span id="linkNote">（联动锁开着，换套装会同步换主题色）</span><br/>抽屉里点课程配色，预览里的课程色跟着变；联动锁关掉后，换套装只换课程色，主题色不动。</div>
+  </div>
+
+  <div class="section-title">
+    <span class="st-name">色彩与主题</span>
+    <span class="st-value" id="sectionValue">莫兰迪 · 雾绿</span>
+  </div>
+  <div class="section-box">
+    <button class="entry-row" id="openSheet">
+      <span class="er-label">主题与课程配色</span>
+      <span class="er-value" id="entryValue">莫兰迪 · 雾绿</span>
+      <span class="er-chev">›</span>
+    </button>
+  </div>
+  <div class="section-hint">父页只留 1 行入口，两个设置收进同一个抽屉；抽屉高度不超屏幕 55%，遮罩近透明，顶部预览始终看得见。</div>
+
+  <div class="foot">UI 样品 — 小马课表「主题与课程配色合并」方案 B<br/>228 线框口径 · 235 底栏口径 · 375px · 单文件自包含</div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">主题与课程配色</div>
+  <div class="sheet-body">
+    <div class="sheet-label">界面主题色</div>
+    <div class="theme-dots" id="themeDots"></div>
+    <div class="lock-row" id="lockRow">
+      <div>
+        <div class="lr-text">联动：换课程配色时同步换主题色</div>
+        <div class="lr-sub">默认开启；关掉后换套装只换课程色</div>
+      </div>
+      <div class="lock-switch" id="lockSwitch"></div>
+    </div>
+    <div class="sheet-label">课程配色（7 套）</div>
+    <div id="paletteList"></div>
+  </div>
+</div>
+
+<script>
+  const THEMES = [
+    { id: 'forest',   name: '雾绿',   seed: '#3E7B67' },
+    { id: 'ocean',    name: '海盐蓝', seed: '#3B6E9C' },
+    { id: 'grape',    name: '葡萄紫', seed: '#6B5B95' },
+    { id: 'sunset',   name: '落日橙', seed: '#D96B43' },
+    { id: 'rose',     name: '玫瑰粉', seed: '#C85A7C' },
+    { id: 'cocoa',    name: '可可棕', seed: '#8C6246' },
+    { id: 'graphite', name: '曜石灰', seed: '#475569' },
+  ];
+  const PALETTES = [
+    { id: 'morandi',        name: '莫兰迪·高级灰', colors: ['#D9C2C7','#C7BFC4','#B8BFC7','#AFC3BB'], theme: 'forest' },
+    { id: 'macaron',        name: '马卡龙·甜心',   colors: ['#F2C6C2','#F5D7C4','#F7E3B0','#E9EFC0'], theme: 'rose' },
+    { id: 'seasalt',        name: '海盐·蓝调',     colors: ['#9DBEDE','#8FB0D8','#A8C8E8','#93C4D8'], theme: 'ocean' },
+    { id: 'spring-fair',    name: '春日·游园会',   colors: ['#FFCDD2','#B8E8E2','#FFE5B4','#D4C8F0'], theme: 'forest' },
+    { id: 'cream-soda',     name: '奶油·苏打水',   colors: ['#B6E3EE','#FFC8BD','#CCEBC5','#CBC9F2'], theme: 'ocean' },
+    { id: 'dopamine-candy', name: '多巴胺·糖果盒', colors: ['#FFA6A8','#94C2F4','#FFDB85','#C2AAEE'], theme: 'graphite' },
+    { id: 'retro-film',     name: '复古·胶片馆',   colors: ['#E8B4A6','#A6C4DC','#F0D69E','#AECBB8'], theme: 'cocoa' },
+  ];
+  const PREVIEW = [
+    { day: '周一', cells: [ {n:'高等数学', r:'1–2 节', c:0}, {n:'大学物理', r:'3–4 节', c:1}, null ] },
+    { day: '周二', cells: [ null, {n:'药物分析', r:'3–4 节', c:2}, {n:'有机化学', r:'6–8 节', c:3} ] },
+    { day: '周三', cells: [ {n:'无机化学', r:'1–2 节', c:1}, null, {n:'体育', r:'6–7 节', c:0} ] },
+  ];
+  let curPalette = PALETTES[0];
+  let curTheme = THEMES[0];
+  let linked = true;
+
+  function hexToRgb(hex) {
+    const v = parseInt(hex.slice(1), 16);
+    return [(v >> 16) & 255, (v >> 8) & 255, v & 255].join(', ');
+  }
+  function applyTheme(t) {
+    curTheme = t;
+    const root = document.documentElement;
+    root.style.setProperty('--seed', t.seed);
+    root.style.setProperty('--seed-rgb', hexToRgb(t.seed));
+    document.getElementById('nowTheme').textContent = t.name;
+    document.querySelectorAll('.theme-dot').forEach(d => d.classList.toggle('on', d.dataset.id === t.id));
+    syncLabels();
+  }
+  function applyPalette(p) {
+    curPalette = p;
+    document.getElementById('nowPalette').textContent = p.name;
+    document.querySelectorAll('.palette-row').forEach(r => r.classList.toggle('on', r.dataset.id === p.id));
+    renderPreview();
+    if (linked) {
+      const t = THEMES.find(x => x.id === p.theme);
+      if (t) applyTheme(t);
+    }
+    syncLabels();
+  }
+  function syncLabels() {
+    const v = curPalette.name.split('·')[0] + ' · ' + curTheme.name;
+    document.getElementById('sectionValue').textContent = v;
+    document.getElementById('entryValue').textContent = v;
+    document.getElementById('linkNote').textContent = linked ? '（联动锁开着，换套装会同步换主题色）' : '（联动锁已关，换套装只换课程色）';
+  }
+  function renderPreview() {
+    const g = document.getElementById('previewGrid');
+    let html = '<div></div>';
+    PREVIEW.forEach(d => { html += '<div class="ph">' + d.day + '</div>'; });
+    ['1–2 节','3–4 节','6–8 节'].forEach((label, ri) => {
+      html += '<div class="pn">' + label + '</div>';
+      PREVIEW.forEach(d => {
+        const cell = d.cells[ri];
+        if (!cell) { html += '<div class="preview-cell blank"></div>'; return; }
+        const col = curPalette.colors[cell.c % curPalette.colors.length];
+        html += '<div class="preview-cell" style="background:' + col + '"><span>' + cell.n + '</span><small>' + cell.r + '</small></div>';
+      });
+    });
+    g.innerHTML = html;
+  }
+  // 主题色圆点
+  const dots = document.getElementById('themeDots');
+  THEMES.forEach(t => {
+    const d = document.createElement('div');
+    d.className = 'theme-dot' + (t.id === curTheme.id ? ' on' : '');
+    d.dataset.id = t.id;
+    d.style.background = t.seed;
+    d.title = t.name;
+    d.innerHTML = '<span class="td-check">✓</span>';
+    d.addEventListener('click', () => applyTheme(t));
+    dots.appendChild(d);
+  });
+  // 课程配色列表
+  const list = document.getElementById('paletteList');
+  PALETTES.forEach(p => {
+    const t = THEMES.find(x => x.id === p.theme);
+    const row = document.createElement('div');
+    row.className = 'palette-row' + (p.id === curPalette.id ? ' on' : '');
+    row.dataset.id = p.id;
+    row.innerHTML = '<span class="pr-name">' + p.name + '</span>'
+      + '<span class="pr-colors">' + p.colors.map(c => '<i style="background:' + c + '"></i>').join('') + '</span>'
+      + '<span class="pr-theme" style="background:' + t.seed + '" title="配套主题：' + t.name + '"></span>'
+      + '<span class="pr-check">✓</span>';
+    row.addEventListener('click', () => applyPalette(p));
+    list.appendChild(row);
+  });
+  // 联动锁
+  document.getElementById('lockRow').addEventListener('click', () => {
+    linked = !linked;
+    document.getElementById('lockSwitch').classList.toggle('off', !linked);
+    syncLabels();
+  });
+  // 抽屉开关
+  const sheet = document.getElementById('sheet');
+  const scrim = document.getElementById('scrim');
+  function openSheet() { sheet.classList.add('open'); scrim.classList.add('open'); }
+  function closeSheet() { sheet.classList.remove('open'); scrim.classList.remove('open'); }
+  document.getElementById('openSheet').addEventListener('click', openSheet);
+  scrim.addEventListener('click', closeSheet);
+  // 深浅切换
+  document.getElementById('modeSeg').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    document.querySelectorAll('#modeSeg button').forEach(x => x.classList.toggle('on', x === b));
+    document.documentElement.setAttribute('data-theme', b.dataset.mode === 'dark' ? 'dark' : 'light');
+  });
+  renderPreview();
+  syncLabels();
+</script>
+</body>
+</html>
