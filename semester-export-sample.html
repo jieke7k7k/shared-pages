@@ -488,15 +488,15 @@
   <div class="sheet-demo">
     <div class="bs">
       <div class="handle"></div>
-      <div class="opt"><span class="ic">📄</span><div><div class="t1">导出整学期完整课表（PDF）</div><div class="t2">包含全部 20 周及考试周 · 适合打印存档</div></div></div>
+      <div class="opt"><span class="ic">📄</span><div><div class="t1">导出整学期完整课表（PDF）</div><div class="t2">包含全部周次（页数按课表自动算） · 适合打印存档</div></div></div>
       <div class="opt"><span class="ic">🖼️</span><div><div class="t1">导出当前第 12 周课表（高清图片）</div><div class="t2">适合发给同学或设为锁屏壁纸</div></div></div>
       <div class="cancel">取消 / 关闭</div>
     </div>
   </div>
-  <p class="cap">导出后自动调 shareXFiles 打开分享，默认文案「这是 2026 年大三下学期完整课表（共 20 周），请查收」，底部 SnackBar 提示「已生成 20 页 PDF，正在打开分享面板…」。</p>
+  <p class="cap">导出后自动调 shareXFiles 打开分享，默认文案「这是 2026 年大三下学期完整课表，请查收」，底部 SnackBar 提示「已生成 N 页 PDF，正在打开分享面板…」（N = 课表里最晚那周，导出时软件自己算）。</p>
 
   <div class="warn">
-    <b>⚠️ 一处数字对不上，落盘前要定：</b>你问的是 16–18 周，Argon 表格里写 16–18，但引言、定型和上面这套按钮文案里写的是 20 周（「包含全部 20 周及考试周」「共 20 周」）。样品先按 Argon 原文画，落盘时按实际学期周数统一。
+    <b>已定（2026-11-17）：</b>周数不用定死，导出时软件按课表里最晚那周自动算页数（最晚的课到第几周，PDF 就是几页）。
   </div>
 
   <div class="foot">
