@@ -89,14 +89,13 @@
   .c-salmon { background: #E8A8A0; border-color: #D4897F; }
   .c-lgreen { background: #A8D0B0; border-color: #7FB392; }
   .c-pink   { background: #E8A8C0; border-color: #D489A8; }
-  /* 冲突块：一个完整外框（像一节课），整框一个特殊渐变色（区别其他课程的纯色块），中间虚线分开，上下半各标前半/后半学期 */
-  .conflict { display: flex; flex-direction: column; padding: 0; margin: 1px; overflow: hidden; background: linear-gradient(180deg, #FED7AA 0%, #FDBA74 100%); border: 1.5px solid #6B7280; border-radius: 8px; }
+  /* 冲突块：一个完整外框（像一节课），整框一个亮橙渐变色（区别其他课程的纯色块），中间虚线分开，上下半各标前半/后半学期 */
+  .conflict { display: flex; flex-direction: column; padding: 0; margin: 1px; overflow: hidden; background: linear-gradient(180deg, #FBBF24 0%, #F97316 100%); border: 1.5px solid #6B7280; border-radius: 8px; }
   .conflict .half { flex: 1; padding: 2px 4px; overflow: hidden; background: transparent; font-size: 9.5px; line-height: 1.25; font-weight: 700; color: #1F2937; }
   .conflict .half .tag { display: inline-block; font-size: 8px; font-weight: 600; color: #4B5563; background: rgba(255,255,255,0.7); border-radius: 3px; padding: 0 3px; line-height: 1.5; white-space: nowrap; }
   .conflict .half .meta { font-size: 8.5px; font-weight: 500; color: #374151; }
   .conflict .half.top { border-bottom: 1.5px dashed #6B7280; }
-  /* 三种对比风格（第 12 周对比区） */
-  .conflict.strong { background: linear-gradient(180deg, #FBBF24 0%, #F97316 100%); }
+  /* 三种对比风格（第 12 周对比区，A 已定为正式样式，见 .conflict） */
   .conflict.ticket { background: #FDE68A; position: relative; }
   .conflict.ticket::before, .conflict.ticket::after { content: ""; position: absolute; top: 50%; width: 10px; height: 10px; margin-top: -5px; border-radius: 50%; background: #FBF9F5; }
   .conflict.ticket::before { left: -5px; }
@@ -381,7 +380,7 @@
   <p class="cap"><b>周一 1–2 节（半块 &lt; 50px）：</b>一个完整框、特殊渐变色、虚线分半，上半「前半学期」药物化学、下半「后半学期」药理学，老师名藏掉，只留「课名 · 教室」。<b>周二 6–9 节（半块够高）：</b>同样一框渐变分半，教室信息全留。上半永远是前半学期、下半是后半学期。渐变色所有冲突块统一用，不用各门课自己的颜色。</p>
 
   <h2>③ 三种风格对比<span class="tag">你挑一个</span></h2>
-  <p class="note">现在的第 12 页是淡渐变（你说不够明显）。下面三个是另外的方案：<b>A 强渐变</b>（周一 1–2 节，渐变加深加艳，一眼就是特殊的）、<b>B 票根撕线</b>（周二 6–9 节，两边带撕口、中间是撕线，像一张票根）、<b>C 粗框</b>（周三 1–2 节，平色底 + 3px 粗边框，框本身就很显眼）。</p>
+  <p class="note">第 12 页已换成你定的 A 强渐变。下面是当时对比的三个方案，B、C 留着当备选：<b>A 强渐变</b>（周一 1–2 节）、<b>B 票根撕线</b>（周二 6–9 节）、<b>C 粗框</b>（周三 1–2 节）。</p>
 <div class="sheet">
     <div class="sheet-title"><h3>三种风格对比 · 第 12 周</h3><p>11月23日 – 11月29日 · 同一周里放三种冲突块，方便一眼对比</p></div>
     <div class="grid">
@@ -482,7 +481,7 @@
       <div class="conflict accent" style="grid-row:2 / 4;grid-column:4"><div class="half top"><span class="tag">前半学期</span><br>药物化学<div class="meta">16-102</div></div><div class="half bot"><span class="tag">后半学期</span><br>药理学<div class="meta">16-639</div></div></div>
     </div>
   </div>
-  <p class="cap">A 最艳，B 最像票，C 最稳。你看哪个顺眼，或者要我再换。</p>
+  <p class="cap">已定：A 强渐变。</p>
 
   <h2>④ 导出页入口<span class="tag">BottomSheet 双轨</span></h2>
   <p class="note">现状只有一句「导出本周课表」。Argon 建议：主页右上角点「导出」后弹一个约 260dp 的 BottomSheet，上下两行，PDF 走整学期、PNG 走当前周。</p>
