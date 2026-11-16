@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>UI 样品 — 小马课表「编辑模式修订版」 (236 §8 再审结论)</title>
+<style>
+  :root {
+    --seed: #8C6246;
+    --seed-rgb: 140, 98, 70;
+    --bg-base: #FAFAF8;
+    --surface: color-mix(in srgb, #FAFAF8 96%, var(--seed) 4%);
+    --card-bg: #FFFFFF;
+    --border-color: #E5E7EB;
+    --divider-color: #EFEFEF;
+    --text-primary: #18181B;
+    --text-secondary: #52525B;
+    --text-tertiary: #71717A;
+    --text-muted: #A1A1AA;
+    --primary: var(--seed);
+    --primary-soft: rgba(var(--seed-rgb), 0.11);
+    --primary-border: rgba(var(--seed-rgb), 0.28);
+    --badge-bg: #F4F4F5;
+    --gridline: rgba(0, 0, 0, 0.14);
+    --card-outline: rgba(24, 24, 27, 0.25);
+  }
+  [data-theme="dark"] {
+    --bg-base: #121214;
+    --surface: color-mix(in srgb, #121214 96%, var(--seed) 4%);
+    --card-bg: #18191C;
+    --border-color: rgba(255, 255, 255, 0.09);
+    --divider-color: rgba(255, 255, 255, 0.06);
+    --text-primary: #F4F4F5;
+    --text-secondary: #A1A1AA;
+    --text-tertiary: #71717A;
+    --text-muted: #52525B;
+    --primary: color-mix(in srgb, var(--seed) 65%, #FFFFFF 35%);
+    --primary-soft: rgba(var(--seed-rgb), 0.22);
+    --primary-border: rgba(var(--seed-rgb), 0.42);
+    --badge-bg: #232429;
+    --gridline: rgba(255, 255, 255, 0.16);
+    --card-outline: rgba(255, 255, 255, 0.25);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Microsoft YaHei", sans-serif;
+    background-color: #ECECEE; color: var(--text-primary);
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh; padding: 16px 12px 40px; transition: background-color 0.2s ease;
+  }
+  [data-theme="dark"] body { background-color: #09090B; }
+  .phone { width: 100%; max-width: 375px; }
+  .workbench-bar {
+    width: 100%; background: var(--card-bg); border: 1px solid var(--border-color);
+    border-radius: 14px; padding: 10px 12px; margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  }
+  .workbench-bar .wb-title { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+  .workbench-bar .wb-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+  .seg { display: flex; background: var(--badge-bg); border-radius: 999px; padding: 2px; gap: 2px; flex-shrink: 0; }
+  .seg button {
+    border: 0; background: transparent; color: var(--text-secondary);
+    font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 999px; cursor: pointer;
+  }
+  .seg button.on { background: var(--card-bg); color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+
+  /* ============ 周视图模拟 ============ */
+  .week-view {
+    background: var(--surface); border: 1px solid var(--border-color);
+    border-radius: 14px; overflow: hidden; margin-bottom: 14px;
+  }
+  .appbar {
+    height: 52px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 12px; gap: 8px;
+  }
+  .appbar .title-normal { font-size: 17px; font-weight: 700; }
+  .appbar .title-capsule {
+    display: none; align-items: center; gap: 5px;
+    background: var(--primary-soft); border-radius: 999px; padding: 5px 12px;
+    font-size: 12.5px; font-weight: 600; color: var(--primary);
+    animation: capsuleIn 0.18s ease;
+  }
+  @keyframes capsuleIn { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: scale(1); } }
+  .appbar .actions { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+  .icon-btn {
+    width: 34px; height: 34px; border-radius: 50%; border: 0; cursor: pointer;
+    background: transparent; color: var(--text-secondary); font-size: 17px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .icon-btn:active { background: var(--badge-bg); }
+  .done-btn {
+    display: none; border: 0; cursor: pointer; border-radius: 999px;
+    background: var(--primary); color: #fff; font-size: 12.5px; font-weight: 600;
+    padding: 6px 13px;
+  }
+  /* 编辑模式状态 */
+  .week-view.editing .title-normal { display: none; }
+  .week-view.editing .title-capsule { display: inline-flex; }
+  .week-view.editing .edit-entry { display: none; }
+  .week-view.editing .done-btn { display: block; }
+  /* 26dp 常驻提示条（AppBar 下方、星期表头上方） */
+  .edit-strip {
+    display: none; height: 26px; align-items: center; justify-content: center;
+    background: var(--primary-soft); color: var(--text-secondary);
+    font-size: 11.5px; font-weight: 500; white-space: nowrap; overflow: hidden;
+  }
+  .week-view.editing .edit-strip { display: flex; }
+  .week-jumper {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 8px 0 6px; font-size: 13px; font-weight: 600; color: var(--text-secondary);
+  }
+  .week-jumper button {
+    border: 0; background: transparent; color: var(--text-tertiary);
+    font-size: 15px; cursor: pointer; width: 26px; height: 26px; border-radius: 50%;
+  }
+  .week-view.editing .week-jumper { opacity: 0.45; }
+  .week-view.editing .week-jumper button { cursor: not-allowed; }
+  .week-view.editing .week-jumper .lock-tag { font-size: 10.5px; font-weight: 500; color: var(--text-tertiary); }
+  .week-jumper .lock-tag { display: none; }
+  .week-view.editing .week-jumper .lock-tag { display: inline; }
+  /* 网格 */
+  .grid-head, .grid-row { display: grid; grid-template-columns: 34px repeat(5, 1fr); }
+  .grid-head { padding: 0 8px; }
+  .grid-head .gh {
+    font-size: 11px; color: var(--text-tertiary); text-align: center; padding: 4px 0 6px;
+  }
+  .grid-head .gh b { display: block; font-size: 12.5px; color: var(--text-primary); font-weight: 600; }
+  .grid-head .gh.today b { color: var(--primary); }
+  .grid-body { padding: 0 8px 10px; }
+  .grid-row { min-height: 64px; }
+  .grid-row .period {
+    font-size: 10px; color: var(--text-muted); display: flex; align-items: flex-start;
+    justify-content: center; padding-top: 8px;
+  }
+  .cell { padding: 3px; position: relative; }
+  /* 空白格：平时无框；编辑模式时临时 0.5dp 浅灰网格线 */
+  .cell.blank { border: 0.5px solid transparent; border-radius: 8px; }
+  .week-view.editing .cell.blank { border-color: var(--gridline); }
+  .course-card {
+    height: 100%; min-height: 58px; border-radius: 8px; padding: 6px;
+    display: flex; flex-direction: column; gap: 2px;
+    font-size: 11px; font-weight: 600; color: #18181B; line-height: 1.3;
+  }
+  .course-card small { font-size: 9.5px; font-weight: 500; opacity: 0.72; }
+  /* 编辑模式：卡片外圈 1.0dp 描边，无铅笔角标 */
+  .week-view.editing .course-card { outline: 1px solid var(--card-outline); outline-offset: -1px; }
+
+  .demo-row { display: flex; gap: 8px; margin-bottom: 14px; }
+  .demo-btn {
+    flex: 1; border: 1.5px solid var(--primary); background: var(--primary); color: #fff;
+    border-radius: 12px; padding: 11px 0; font-size: 13.5px; font-weight: 600; cursor: pointer;
+  }
+  .demo-btn.ghost { background: transparent; color: var(--primary); }
+  .change-list {
+    background: var(--card-bg); border: 1px solid var(--border-color);
+    border-radius: 14px; padding: 14px; font-size: 12px; line-height: 1.75; color: var(--text-secondary);
+  }
+  .change-list b { color: var(--text-primary); }
+  .change-list .old { color: var(--text-muted); }
+  .change-list .old s { color: var(--text-muted); }
+  .foot { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 12px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="phone" id="app">
+  <div class="workbench-bar">
+    <div>
+      <div class="wb-title">修订版 · 编辑模式（三件套重审后）</div>
+      <div class="wb-sub">点铅笔进编辑模式，再点「完成」退出，对比看看</div>
+    </div>
+    <div class="seg" id="modeSeg">
+      <button class="on" data-mode="light">浅色</button>
+      <button data-mode="dark">深色</button>
+    </div>
+  </div>
+
+  <div class="week-view" id="weekView">
+    <div class="appbar">
+      <span class="title-normal">第 12 周</span>
+      <span class="title-capsule">✏️ 编辑模式</span>
+      <div class="actions">
+        <button class="icon-btn edit-entry" id="editEntry" title="进入编辑模式">✏️</button>
+        <button class="done-btn" id="doneBtn">完成</button>
+      </div>
+    </div>
+    <div class="edit-strip">点空白格加课 · 长按课程可编辑（已锁定滑动）</div>
+    <div class="week-jumper">
+      <button id="prevWeek" title="上一周">‹</button>
+      <span>11月16日 – 11月22日</span>
+      <span class="lock-tag">🔒 已锁定滑动</span>
+      <button id="nextWeek" title="下一周">›</button>
+    </div>
+    <div class="grid-head">
+      <div></div>
+      <div class="gh today"><b>16</b>周一</div>
+      <div class="gh"><b>17</b>周二</div>
+      <div class="gh"><b>18</b>周三</div>
+      <div class="gh"><b>19</b>周四</div>
+      <div class="gh"><b>20</b>周五</div>
+    </div>
+    <div class="grid-body" id="gridBody"></div>
+  </div>
+
+  <div class="demo-row">
+    <button class="demo-btn" id="enterBtn">进入编辑模式</button>
+    <button class="demo-btn ghost" id="exitBtn">退出编辑模式</button>
+  </div>
+
+  <div class="change-list">
+    <b>相对原方案改了什么（Argon 再审结论「一删、二改、一替」）：</b><br/>
+    删：<span class="old"><s>进编辑模式 2 秒 SnackBar 黑条</s>（挡第 12–13 节）</span>、<span class="old"><s>课程卡右上角铅笔角标</s>（会误导单击）</span><br/>
+    改：AppBar 胶囊只写「✏️ 编辑模式」4 个字（原 18 字在 360dp 上放不下会被截断）；空白格「+」改成进编辑模式时临时显示的 0.5dp 浅灰网格线<br/>
+    替：说明文字移到 AppBar 下方常驻 26dp 通栏细横条，退出时收起；提示条加「（已锁定滑动）」，没开「行高自适应一屏」时滑不到第 10 节也不懵<br/>
+    保留：卡片外圈 1.0dp 描边；长按空白格仍是第二入口（高亮框 + 横向锁定）
+  </div>
+
+  <div class="foot">UI 样品 — 小马课表「编辑模式修订版」<br/>236 §8 再审结论 · 375px · 单文件自包含</div>
+</div>
+
+<script>
+  // 莫兰迪课程色（与课表一致）
+  const COLORS = ['#D9C2C7', '#C7BFC4', '#B8BFC7', '#AFC3BB', '#C4CBB5'];
+  // 5 天 × 4 段（上午 1–2 / 3–4，下午 6–8，晚上 9–10）
+  const ROWS = [
+    { label: '1–2', cells: [ {n:'高等数学', r:'教 3-201', c:0}, null, {n:'无机化学', r:'药学楼 A101', c:3}, null, null ] },
+    { label: '3–4', cells: [ null, {n:'大学物理', r:'教 3-105', c:1}, null, {n:'药物分析', r:'药学楼 B302', c:2}, null ] },
+    { label: '6–8', cells: [ null, null, {n:'有机化学', r:'教 3-201', c:2}, null, {n:'体育', r:'操场', c:4} ] },
+    { label: '9–10', cells: [ {n:'英语', r:'教 3-305', c:1}, null, null, null, null ] },
+  ];
+  const body = document.getElementById('gridBody');
+  ROWS.forEach(row => {
+    const div = document.createElement('div');
+    div.className = 'grid-row';
+    let html = '<div class="period">' + row.label + '</div>';
+    row.cells.forEach(cell => {
+      if (!cell) { html += '<div class="cell blank"></div>'; return; }
+      html += '<div class="cell"><div class="course-card" style="background:' + COLORS[cell.c % COLORS.length] + '"><span>' + cell.n + '</span><small>' + cell.r + '</small></div></div>';
+    });
+    div.innerHTML = html;
+    body.appendChild(div);
+  });
+  const view = document.getElementById('weekView');
+  function setEdit(on) { view.classList.toggle('editing', on); }
+  document.getElementById('editEntry').addEventListener('click', () => setEdit(true));
+  document.getElementById('enterBtn').addEventListener('click', () => setEdit(true));
+  document.getElementById('doneBtn').addEventListener('click', () => setEdit(false));
+  document.getElementById('exitBtn').addEventListener('click', () => setEdit(false));
+  document.getElementById('prevWeek').addEventListener('click', () => { if (!view.classList.contains('editing')) alert('上一周（演示：仅在非编辑模式可切换）'); });
+  document.getElementById('nextWeek').addEventListener('click', () => { if (!view.classList.contains('editing')) alert('下一周（演示：仅在非编辑模式可切换）'); });
+  document.getElementById('modeSeg').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    document.querySelectorAll('#modeSeg button').forEach(x => x.classList.toggle('on', x === b));
+    document.documentElement.setAttribute('data-theme', b.dataset.mode === 'dark' ? 'dark' : 'light');
+  });
+</script>
+</body>
+</html>

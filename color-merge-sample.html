@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>UI 样品 — 小马课表「主题与课程配色合并」方案 A (228/235 定版口径)</title>
+<style>
+  :root {
+    /* 默认种子色：可可棕 cocoa 0xFF8C6246（莫兰迪套装的配套主题是雾绿，见 JS 默认选中） */
+    --seed: #8C6246;
+    --seed-rgb: 140, 98, 70;
+    --bg-base: #FAFAF8;
+    --surface: color-mix(in srgb, #FAFAF8 96%, var(--seed) 4%);
+    --card-bg: #FFFFFF;
+    --border-color: #E5E7EB;
+    --divider-color: #EFEFEF;
+    --text-primary: #18181B;
+    --text-secondary: #52525B;
+    --text-tertiary: #71717A;
+    --text-muted: #A1A1AA;
+    --primary: var(--seed);
+    --primary-soft: rgba(var(--seed-rgb), 0.11);
+    --primary-border: rgba(var(--seed-rgb), 0.28);
+    --badge-bg: #F4F4F5;
+  }
+  [data-theme="dark"] {
+    --bg-base: #121214;
+    --surface: color-mix(in srgb, #121214 96%, var(--seed) 4%);
+    --card-bg: #18191C;
+    --border-color: rgba(255, 255, 255, 0.09);
+    --divider-color: rgba(255, 255, 255, 0.06);
+    --text-primary: #F4F4F5;
+    --text-secondary: #A1A1AA;
+    --text-tertiary: #71717A;
+    --text-muted: #52525B;
+    --primary: color-mix(in srgb, var(--seed) 65%, #FFFFFF 35%);
+    --primary-soft: rgba(var(--seed-rgb), 0.22);
+    --primary-border: rgba(var(--seed-rgb), 0.42);
+    --badge-bg: #232429;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "HarmonyOS Sans SC", "MiSans", "Microsoft YaHei", sans-serif;
+    background-color: #ECECEE; color: var(--text-primary);
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh; padding: 16px 12px 40px; transition: background-color 0.2s ease;
+  }
+  [data-theme="dark"] body { background-color: #09090B; }
+  .phone { width: 100%; max-width: 375px; }
+  .workbench-bar {
+    width: 100%; background: var(--card-bg); border: 1px solid var(--border-color);
+    border-radius: 14px; padding: 10px 12px; margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  }
+  .workbench-bar .wb-title { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+  .workbench-bar .wb-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+  .seg { display: flex; background: var(--badge-bg); border-radius: 999px; padding: 2px; gap: 2px; flex-shrink: 0; }
+  .seg button {
+    border: 0; background: transparent; color: var(--text-secondary);
+    font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 999px; cursor: pointer;
+  }
+  .seg button.on { background: var(--card-bg); color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+
+  /* 页顶实时预览（迷你课表） */
+  .preview-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); margin: 2px 2px 8px; }
+  .preview-box {
+    background: var(--surface); border: 1px solid var(--border-color);
+    border-radius: 14px; padding: 12px; margin-bottom: 16px;
+  }
+  .preview-grid { display: grid; grid-template-columns: 30px repeat(3, 1fr); gap: 6px; }
+  .preview-grid .ph { font-size: 10.5px; color: var(--text-tertiary); text-align: center; padding: 2px 0; }
+  .preview-grid .pn { font-size: 10px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; }
+  .preview-cell {
+    border-radius: 8px; padding: 7px 6px; font-size: 11px; font-weight: 600;
+    color: #18181B; line-height: 1.3; min-height: 44px;
+    display: flex; flex-direction: column; justify-content: center; gap: 1px;
+  }
+  .preview-cell small { font-size: 9.5px; font-weight: 500; opacity: 0.72; }
+  .preview-cell.blank { background: transparent; border: 1px dashed var(--border-color); }
+  .preview-note { font-size: 11px; color: var(--text-tertiary); margin-top: 10px; line-height: 1.5; }
+  .preview-note b { color: var(--text-secondary); font-weight: 600; }
+
+  /* 228 形态 A 线框：标题在框外左上方 */
+  .section-title {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 0 4px; margin-bottom: 6px;
+  }
+  .section-title .st-name { font-size: 13.5px; font-weight: 600; }
+  .section-title .st-value { font-size: 12px; color: var(--text-tertiary); }
+  .section-box {
+    background: var(--card-bg); border: 1px solid var(--border-color);
+    border-radius: 14px; padding: 14px 12px; margin-bottom: 16px;
+  }
+  .section-box .box-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 10px; }
+  .section-box .box-hint { font-size: 11px; color: var(--text-tertiary); line-height: 1.55; margin-top: 10px; }
+  .section-box .box-hint b { color: var(--text-secondary); }
+
+  /* 胶片卡横向滑动 */
+  .film-strip {
+    display: flex; gap: 10px; overflow-x: auto; padding: 2px 2px 8px;
+    scroll-snap-type: x mandatory; scrollbar-width: none;
+  }
+  .film-strip::-webkit-scrollbar { display: none; }
+  .film-card {
+    flex: 0 0 118px; scroll-snap-align: start; cursor: pointer;
+    background: var(--surface); border: 1.5px solid var(--border-color);
+    border-radius: 12px; padding: 10px; position: relative;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .film-card.on { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+  .film-card .fc-check {
+    position: absolute; top: 6px; right: 6px; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--primary); color: #fff; font-size: 10px; line-height: 16px; text-align: center;
+    display: none;
+  }
+  .film-card.on .fc-check { display: block; }
+  .film-card .fc-name { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+  .film-card .fc-colors { display: flex; gap: 4px; margin-bottom: 8px; }
+  .film-card .fc-colors i { flex: 1; height: 22px; border-radius: 5px; display: block; }
+  .film-card .fc-theme { display: flex; align-items: center; gap: 5px; font-size: 10.5px; color: var(--text-tertiary); }
+  .film-card .fc-theme i { width: 12px; height: 12px; border-radius: 50%; display: block; flex-shrink: 0; }
+
+  .theme-dots { display: flex; gap: 12px; align-items: center; padding: 2px 2px 0; flex-wrap: wrap; }
+  .theme-dot {
+    width: 30px; height: 30px; border-radius: 50%; cursor: pointer; position: relative;
+    border: 2px solid transparent; outline: 2px solid transparent; outline-offset: 2px;
+    transition: outline-color 0.15s ease;
+  }
+  .theme-dot.on { outline-color: var(--primary); }
+  .theme-dot .td-check {
+    position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+    color: #fff; font-size: 13px; font-weight: 700;
+  }
+  .theme-dot.on .td-check { display: flex; }
+  .theme-custom {
+    width: 30px; height: 30px; border-radius: 50%; cursor: pointer; position: relative; overflow: hidden;
+    border: 1.5px dashed var(--text-tertiary); background:
+      conic-gradient(#F87171, #FBBF24, #34D399, #60A5FA, #A78BFA, #F472B6, #F87171);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .theme-custom input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .theme-custom span { font-size: 15px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.4); pointer-events: none; }
+  .theme-name { font-size: 11.5px; color: var(--text-secondary); margin-top: 8px; }
+  .theme-name b { font-weight: 600; }
+  .deleted-note {
+    margin-top: 12px; padding: 8px 10px; border-radius: 8px; background: var(--badge-bg);
+    font-size: 11px; color: var(--text-tertiary); line-height: 1.55;
+  }
+  .deleted-note s { color: var(--text-muted); }
+  .foot { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 4px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="phone" id="app">
+  <div class="workbench-bar">
+    <div>
+      <div class="wb-title">方案 A · 零弹窗内联面板</div>
+      <div class="wb-sub">点胶片卡换课程配色（自动联动主题色）· 点圆点只改主题色</div>
+    </div>
+    <div class="seg" id="modeSeg">
+      <button class="on" data-mode="light">浅色</button>
+      <button data-mode="dark">深色</button>
+    </div>
+  </div>
+
+  <div class="preview-title">实时预览</div>
+  <div class="preview-box">
+    <div class="preview-grid" id="previewGrid"></div>
+    <div class="preview-note">当前：<b id="nowPalette">莫兰迪·高级灰</b> × <b id="nowTheme">雾绿</b>（配套推荐色）<br/>换胶片卡时预览里的课程色与界面强调色一起变；只点下面圆点时，只有主题色变，课程色不动。</div>
+  </div>
+
+  <div class="section-title">
+    <span class="st-name">色彩与主题</span>
+    <span class="st-value" id="sectionValue">莫兰迪 · 雾绿</span>
+  </div>
+  <div class="section-box">
+    <div class="box-label">课程配色（7 套，横向滑动）</div>
+    <div class="film-strip" id="filmStrip"></div>
+    <div class="box-label" style="margin-top:6px;">界面主题色</div>
+    <div class="theme-dots" id="themeDots"></div>
+    <div class="theme-name">当前主题：<b id="themeName">雾绿</b> · <span id="themeSeed">#3E7B67</span></div>
+    <div class="box-hint">点课程套装，界面强调色自动跳到配套推荐色；想单独改主题，就点上面圆点微调，课程配色保持不变。</div>
+    <div class="deleted-note">已删：<s>橙色「同步应用推荐界面主题色」文字链</s> —— 它本来就是在承认两者该联动，合并后不需要了。</div>
+  </div>
+
+  <div class="foot">UI 样品 — 小马课表「主题与课程配色合并」方案 A<br/>228 线框口径 · 235 底栏口径 · 375px · 单文件自包含</div>
+</div>
+
+<script>
+  // 7 个界面主题（种子色）
+  const THEMES = [
+    { id: 'forest',   name: '雾绿',   seed: '#3E7B67' },
+    { id: 'ocean',    name: '海盐蓝', seed: '#3B6E9C' },
+    { id: 'grape',    name: '葡萄紫', seed: '#6B5B95' },
+    { id: 'sunset',   name: '落日橙', seed: '#D96B43' },
+    { id: 'rose',     name: '玫瑰粉', seed: '#C85A7C' },
+    { id: 'cocoa',    name: '可可棕', seed: '#8C6246' },
+    { id: 'graphite', name: '曜石灰', seed: '#475569' },
+  ];
+  // 7 套课程配色（每套取前 4 色做胶片卡色块；recommendedThemeId 为配套主题）
+  const PALETTES = [
+    { id: 'morandi',        name: '莫兰迪·高级灰', colors: ['#D9C2C7','#C7BFC4','#B8BFC7','#AFC3BB'], theme: 'forest' },
+    { id: 'macaron',        name: '马卡龙·甜心',   colors: ['#F2C6C2','#F5D7C4','#F7E3B0','#E9EFC0'], theme: 'rose' },
+    { id: 'seasalt',        name: '海盐·蓝调',     colors: ['#9DBEDE','#8FB0D8','#A8C8E8','#93C4D8'], theme: 'ocean' },
+    { id: 'spring-fair',    name: '春日·游园会',   colors: ['#FFCDD2','#B8E8E2','#FFE5B4','#D4C8F0'], theme: 'forest' },
+    { id: 'cream-soda',     name: '奶油·苏打水',   colors: ['#B6E3EE','#FFC8BD','#CCEBC5','#CBC9F2'], theme: 'ocean' },
+    { id: 'dopamine-candy', name: '多巴胺·糖果盒', colors: ['#FFA6A8','#94C2F4','#FFDB85','#C2AAEE'], theme: 'graphite' },
+    { id: 'retro-film',     name: '复古·胶片馆',   colors: ['#E8B4A6','#A6C4DC','#F0D69E','#AECBB8'], theme: 'cocoa' },
+  ];
+  // 迷你课表：3 天 × 3 节，色块按当前套装循环取色
+  const PREVIEW = [
+    { day: '周一', cells: [ {n:'高等数学', r:'1–2 节', c:0}, {n:'大学物理', r:'3–4 节', c:1}, null ] },
+    { day: '周二', cells: [ null, {n:'药物分析', r:'3–4 节', c:2}, {n:'有机化学', r:'6–8 节', c:3} ] },
+    { day: '周三', cells: [ {n:'无机化学', r:'1–2 节', c:1}, null, {n:'体育', r:'6–7 节', c:0} ] },
+  ];
+  let curPalette = PALETTES[0];
+  let curTheme = THEMES[0];
+
+  function hexToRgb(hex) {
+    const v = parseInt(hex.slice(1), 16);
+    return [(v >> 16) & 255, (v >> 8) & 255, v & 255].join(', ');
+  }
+  function applyTheme(t) {
+    curTheme = t;
+    const root = document.documentElement;
+    root.style.setProperty('--seed', t.seed);
+    root.style.setProperty('--seed-rgb', hexToRgb(t.seed));
+    document.getElementById('themeName').textContent = t.name;
+    document.getElementById('themeSeed').textContent = t.seed;
+    document.getElementById('nowTheme').textContent = t.name;
+    document.querySelectorAll('.theme-dot').forEach(d => d.classList.toggle('on', d.dataset.id === t.id));
+    syncSectionValue();
+  }
+  function applyPalette(p, linkTheme) {
+    curPalette = p;
+    document.getElementById('nowPalette').textContent = p.name;
+    document.querySelectorAll('.film-card').forEach(c => c.classList.toggle('on', c.dataset.id === p.id));
+    renderPreview();
+    if (linkTheme) {
+      const t = THEMES.find(x => x.id === p.theme);
+      if (t) applyTheme(t);
+    }
+    syncSectionValue();
+  }
+  function syncSectionValue() {
+    document.getElementById('sectionValue').textContent = curPalette.name.split('·')[0] + ' · ' + curTheme.name;
+  }
+  function renderPreview() {
+    const g = document.getElementById('previewGrid');
+    let html = '<div></div>';
+    PREVIEW.forEach(d => { html += '<div class="ph">' + d.day + '</div>'; });
+    ['1–2 节','3–4 节','6–8 节'].forEach((label, ri) => {
+      html += '<div class="pn">' + label + '</div>';
+      PREVIEW.forEach(d => {
+        const cell = d.cells[ri];
+        if (!cell) { html += '<div class="preview-cell blank"></div>'; return; }
+        const col = curPalette.colors[cell.c % curPalette.colors.length];
+        html += '<div class="preview-cell" style="background:' + col + '"><span>' + cell.n + '</span><small>' + cell.r + '</small></div>';
+      });
+    });
+    g.innerHTML = html;
+  }
+  // 胶片卡
+  const strip = document.getElementById('filmStrip');
+  PALETTES.forEach(p => {
+    const t = THEMES.find(x => x.id === p.theme);
+    const card = document.createElement('div');
+    card.className = 'film-card' + (p.id === curPalette.id ? ' on' : '');
+    card.dataset.id = p.id;
+    card.innerHTML = '<span class="fc-check">✓</span>'
+      + '<div class="fc-name">' + p.name + '</div>'
+      + '<div class="fc-colors">' + p.colors.map(c => '<i style="background:' + c + '"></i>').join('') + '</div>'
+      + '<div class="fc-theme"><i style="background:' + t.seed + '"></i>配 ' + t.name + '</div>';
+    card.addEventListener('click', () => applyPalette(p, true));
+    strip.appendChild(card);
+  });
+  // 主题色圆点
+  const dots = document.getElementById('themeDots');
+  THEMES.forEach(t => {
+    const d = document.createElement('div');
+    d.className = 'theme-dot' + (t.id === curTheme.id ? ' on' : '');
+    d.dataset.id = t.id;
+    d.style.background = t.seed;
+    d.title = t.name;
+    d.innerHTML = '<span class="td-check">✓</span>';
+    d.addEventListener('click', () => applyTheme(t));
+    dots.appendChild(d);
+  });
+  // 自定义取色
+  const custom = document.createElement('div');
+  custom.className = 'theme-custom';
+  custom.innerHTML = '<input type="color" value="#8C6246" id="customColor"><span>+</span>';
+  custom.querySelector('input').addEventListener('input', e => {
+    const v = e.target.value.toUpperCase();
+    applyTheme({ id: 'custom', name: '自定义', seed: v });
+  });
+  dots.appendChild(custom);
+  // 深浅切换
+  document.getElementById('modeSeg').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    document.querySelectorAll('#modeSeg button').forEach(x => x.classList.toggle('on', x === b));
+    document.documentElement.setAttribute('data-theme', b.dataset.mode === 'dark' ? 'dark' : 'light');
+  });
+  renderPreview();
+  syncSectionValue();
+</script>
+</body>
+</html>
