@@ -89,14 +89,12 @@
   .c-salmon { background: #E8A8A0; border-color: #D4897F; }
   .c-lgreen { background: #A8D0B0; border-color: #7FB392; }
   .c-pink   { background: #E8A8C0; border-color: #D489A8; }
-  /* 冲突块：上下分半，中间 2px 白缝，各自独立圆角 */
-  .conflict { display: flex; flex-direction: column; gap: 2px; padding: 0; background: transparent; border: none; margin: 1px; overflow: visible; }
-  .conflict .half { flex: 1; padding: 2px 4px; overflow: hidden; font-size: 9.5px; line-height: 1.25; font-weight: 700; color: #1F2937; border: 1.5px solid; }
+  /* 冲突块：一个完整外框（像一节课），中间虚线分开，上下半各标前半/后半学期 */
+  .conflict { display: flex; flex-direction: column; padding: 0; margin: 1px; overflow: hidden; background: transparent; border: 1.5px solid #6B7280; border-radius: 8px; }
+  .conflict .half { flex: 1; padding: 2px 4px; overflow: hidden; font-size: 9.5px; line-height: 1.25; font-weight: 700; color: #1F2937; }
+  .conflict .half .tag { display: inline-block; font-size: 8px; font-weight: 600; color: #4B5563; background: rgba(255,255,255,0.7); border-radius: 3px; padding: 0 3px; line-height: 1.5; white-space: nowrap; }
   .conflict .half .meta { font-size: 8.5px; font-weight: 500; color: #374151; }
-  .conflict .half.top { border-radius: 8px 8px 3px 3px; }
-  .conflict .half.bot { border-radius: 3px 3px 8px 8px; }
-  .conflict .half.top.c-teal { opacity: 0.85; }
-  .conflict .half.bot.c-purple { opacity: 0.85; }
+  .conflict .half.top { border-bottom: 1.5px dashed #6B7280; }
   .cap { font-size: 12px; color: var(--text3); margin: 6px 2px 0; line-height: 1.5; }
   .cap b { color: var(--text2); }
 
@@ -128,6 +126,10 @@
     .head h1 { font-size: 18px; }
     .grid { grid-template-columns: 30px repeat(7, 1fr); grid-template-rows: 32px repeat(5, 44px) 26px repeat(4, 44px) 26px repeat(5, 44px); padding: 6px 3px 8px; }
     .course { font-size: 10px; line-height: 1.3; padding: 3px 4px; }
+    .conflict { margin: 0; }
+    .conflict .half { padding: 2px 2px; font-size: 8.5px; }
+    .conflict .half .meta { font-size: 8px; }
+    .conflict .half .tag { font-size: 7px; padding: 0 2px; }
     .course .meta { font-size: 8.5px; }
     .sheet-title h3 { font-size: 17px; }
   }
@@ -157,11 +159,11 @@
   </div>
 
   <div class="key">
-    <b>Argon 结论要点：</b>① 视觉必须和单周截图一样（圆角彩色卡、加粗课名、教室+老师、左侧 1–14 节时间轴、午休/晚餐分隔带），矩阵图被否就是因为降维成了 Excel 表。② 每周一张 PNG（共 16–18 张）视觉也满分，但微信发 18 张会被折叠，分享体验极差；一张竖长图 / 横向长图直接否决（字压扁、GPU 纹理超限、内存溢出）。③ 单张 PNG ≤ 1080×1920、≤ 2MB；整本 PDF ≤ 5MB；分享用 shareXFiles 传单个文件（PDF 或 zip），不要一次传 18 张。
+    <b>Argon 结论要点：</b>① 视觉必须和单周截图一样（圆角彩色卡、加粗课名、教室+老师、左侧 1–14 节时间轴、午休/晚休分隔带），矩阵图被否就是因为降维成了 Excel 表。② 每周一张 PNG（共 16–18 张）视觉也满分，但微信发 18 张会被折叠，分享体验极差；一张竖长图 / 横向长图直接否决（字压扁、GPU 纹理超限、内存溢出）。③ 单张 PNG ≤ 1080×1920、≤ 2MB；整本 PDF ≤ 5MB；分享用 shareXFiles 传单个文件（PDF 或 zip），不要一次传 18 张。
   </div>
 
   <h2>① PDF 第 11 页（第 11 周）<span class="tag">复刻截图</span></h2>
-  <p class="note">和你发的截图同一周、同一张课表。截图里写的是「晚间」，样品里按 236 已定的叫法写「晚餐」。</p>
+  <p class="note">和你发的截图同一周、同一张课表。截图里写的是「晚间」，这里按你说的改成「晚休」。</p>
   <div class="sheet">
     <div class="sheet-title"><h3>大三下 · 第 11 周课表</h3><p>11月16日 – 11月22日</p></div>
     <div class="grid">
@@ -247,7 +249,7 @@
       <div class="cell" style="grid-row:17;grid-column:5"></div>
       <div class="cell" style="grid-row:17;grid-column:7"></div>
       <div class="band" style="grid-row:7;grid-column:1 / -1"><span>午休</span><span class="t">午 休&nbsp;&nbsp;12:00 – 14:00</span></div>
-      <div class="band" style="grid-row:12;grid-column:1 / -1"><span>晚餐</span><span class="t">晚 餐&nbsp;&nbsp;17:10 – 18:00</span></div>
+      <div class="band" style="grid-row:12;grid-column:1 / -1"><span>晚休</span><span class="t">晚 休&nbsp;&nbsp;17:10 – 18:00</span></div>
       <div class="course c-blue" style="grid-row:2 / 4;grid-column:5">药物化学<div class="meta">16-102<br>邓卫平</div></div>
       <div class="course c-teal" style="grid-row:4 / 7;grid-column:4">药理学<div class="meta">16-639<br>周金明</div></div>
       <div class="course c-green" style="grid-row:8 / 10;grid-column:2">药物分析<div class="meta">16-222<br>袁培新（晚上同教室）</div></div>
@@ -264,8 +266,8 @@
   </div>
   <p class="cap">第 11 页就是单周截图的原样：每页只画一周，矢量文字，手机上翻页看，也能直接 A4 打印贴书桌。</p>
 
-  <h2>② PDF 第 12 页（第 12 周）<span class="tag">冲突块上下分半</span></h2>
-  <p class="note">同一时段两门课真撞上了（同一周、同一节），才上下切分；<b>单双周课、半学期课不切分</b>——每页只画某一周，单周的课在双周那页根本不出现，1–8 周的课和 9–16 周的课也不会同页出现。只有两门课的周次集合真有交集，才触发分半。</p>
+  <h2>② PDF 第 12 页（第 12 周）<span class="tag">一框虚线分半</span></h2>
+  <p class="note">同一时段被两门半学期课先后占用时，不画成两个小块——画成<b>一个完整框</b>，中间用<b>虚线</b>分开，上半标「前半学期」、下半标「后半学期」，一眼看出是先后两门课，不是同时两节课。</p>
   <div class="sheet">
     <div class="sheet-title"><h3>大三下 · 第 12 周课表</h3><p>11月23日 – 11月29日 · 示例页：周一 1–2 节、周二 6–9 节为冲突演示</p></div>
     <div class="grid">
@@ -349,7 +351,7 @@
       <div class="cell" style="grid-row:17;grid-column:5"></div>
       <div class="cell" style="grid-row:17;grid-column:7"></div>
       <div class="band" style="grid-row:7;grid-column:1 / -1"><span>午休</span><span class="t">午 休&nbsp;&nbsp;12:00 – 14:00</span></div>
-      <div class="band" style="grid-row:12;grid-column:1 / -1"><span>晚餐</span><span class="t">晚 餐&nbsp;&nbsp;17:10 – 18:00</span></div>
+      <div class="band" style="grid-row:12;grid-column:1 / -1"><span>晚休</span><span class="t">晚 休&nbsp;&nbsp;17:10 – 18:00</span></div>
       <div class="course c-blue" style="grid-row:2 / 4;grid-column:5">药物化学<div class="meta">16-102<br>邓卫平</div></div>
       <div class="course c-teal" style="grid-row:4 / 7;grid-column:4">药理学<div class="meta">16-639<br>周金明</div></div>
       <div class="course c-green" style="grid-row:8 / 10;grid-column:2">药物分析<div class="meta">16-222<br>袁培新（晚上同教室）</div></div>
@@ -361,11 +363,11 @@
       <div class="course c-purple" style="grid-row:13 / 18;grid-column:6">实验室</div>
       <div class="course c-purple" style="grid-row:13 / 18;grid-column:8">实验室</div>
       <div class="course c-pink" style="grid-row:15 / 17;grid-column:5">大学体育<div class="meta">体育馆</div></div>
-      <div class="conflict" style="grid-row:2 / 4;grid-column:2"><div class="half top c-blue">药物化学<div class="meta">16-102</div></div><div class="half bot c-teal">药理学<div class="meta">16-639</div></div></div>
-      <div class="conflict" style="grid-row:8 / 12;grid-column:3"><div class="half top c-blue">药物分析实验<div class="meta">12-分析化学实验室（二）(4f)</div></div><div class="half bot c-purple">实验室</div></div>
+      <div class="conflict" style="grid-row:2 / 4;grid-column:2"><div class="half top c-blue"><span class="tag">前半学期</span><br>药物化学<div class="meta">16-102</div></div><div class="half bot c-teal"><span class="tag">后半学期</span><br>药理学<div class="meta">16-639</div></div></div>
+      <div class="conflict" style="grid-row:8 / 12;grid-column:3"><div class="half top c-blue"><span class="tag">前半学期</span><br>药物分析实验<div class="meta">12-分析化学实验室（二）(4f)</div></div><div class="half bot c-purple"><span class="tag">后半学期</span><br>实验室</div></div>
     </div>
   </div>
-  <p class="cap"><b>周一 1–2 节（半块 &lt; 50px）：</b>上下两半，中间 2px 白缝，上半药物化学 100%、下半药理学 85%，字号降到 10.5sp，老师名藏掉，只留「课名 · 教室」。<b>周二 6–9 节（半块够高）：</b>同样分半，教室信息全留。单双周/半学期课在各自的周次页里独占，不用切。</p>
+  <p class="cap"><b>周一 1–2 节（半块 &lt; 50px）：</b>一个完整框、虚线分半，上半「前半学期」药物化学、下半「后半学期」药理学，老师名藏掉，只留「课名 · 教室」。<b>周二 6–9 节（半块够高）：</b>同样一框虚线分半，教室信息全留。上半永远是前半学期、下半是后半学期。</p>
 
   <h2>③ 导出页入口<span class="tag">BottomSheet 双轨</span></h2>
   <p class="note">现状只有一句「导出本周课表」。Argon 建议：主页右上角点「导出」后弹一个约 260dp 的 BottomSheet，上下两行，PDF 走整学期、PNG 走当前周。</p>
